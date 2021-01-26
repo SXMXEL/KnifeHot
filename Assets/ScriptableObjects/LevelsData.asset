@@ -1,0 +1,172 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63505a5c724b8e6489c7c30ce42b7bdd, type: 3}
+  m_Name: LevelsData
+  m_EditorClassIdentifier: 
+  _levels:
+  - _simpleLevelData:
+      _availableKnives: 5
+      _appleChance: 0.25
+      _rotationPattern:
+      - SpeedAndDirection: 2.5
+        Ease: 4
+        Duration: 3
+      _appleAngleFromWheel:
+      - 0
+      _knifeAngleFromWheel: []
+    _bossLevelData:
+      _availableKnives: 0
+      _appleChance: 0
+      _rotationPattern: []
+      _appleAngleFromWheel: []
+      _knifeAngleFromWheel: []
+      _name: 
+  - _simpleLevelData:
+      _availableKnives: 5
+      _appleChance: 0.25
+      _rotationPattern:
+      - SpeedAndDirection: 2.5
+        Ease: 4
+        Duration: 3
+      _appleAngleFromWheel: []
+      _knifeAngleFromWheel:
+      - 60
+    _bossLevelData:
+      _availableKnives: 0
+      _appleChance: 0
+      _rotationPattern: []
+      _appleAngleFromWheel: []
+      _knifeAngleFromWheel: []
+      _name: 
+  - _simpleLevelData:
+      _availableKnives: 6
+      _appleChance: 0.25
+      _rotationPattern:
+      - SpeedAndDirection: -1.5
+        Ease: 7
+        Duration: 3
+      _appleAngleFromWheel:
+      - 60
+      - 90
+      _knifeAngleFromWheel:
+      - 180
+      - 250
+    _bossLevelData:
+      _availableKnives: 0
+      _appleChance: 0
+      _rotationPattern: []
+      _appleAngleFromWheel: []
+      _knifeAngleFromWheel: []
+      _name: 
+  - _simpleLevelData:
+      _availableKnives: 3
+      _appleChance: 0.25
+      _rotationPattern:
+      - SpeedAndDirection: 3
+        Ease: 16
+        Duration: 3
+      _appleAngleFromWheel: []
+      _knifeAngleFromWheel:
+      - 60
+      - 120
+      - 180
+    _bossLevelData:
+      _availableKnives: 0
+      _appleChance: 0
+      _rotationPattern: []
+      _appleAngleFromWheel: []
+      _knifeAngleFromWheel: []
+      _name: 
+  - _simpleLevelData:
+      _availableKnives: 0
+      _appleChance: 0
+      _rotationPattern: []
+      _appleAngleFromWheel: []
+      _knifeAngleFromWheel: []
+    _bossLevelData:
+      _availableKnives: 6
+      _appleChance: 0.25
+      _rotationPattern:
+      - SpeedAndDirection: 1.5
+        Ease: 4
+        Duration: 6
+      _appleAngleFromWheel: []
+      _knifeAngleFromWheel: []
+      _name: Tomato
+  - _simpleLevelData:
+      _availableKnives: 6
+      _appleChance: 0
+      _rotationPattern:
+      - SpeedAndDirection: 2.5
+        Ease: 1
+        Duration: 3
+      _appleAngleFromWheel: []
+      _knifeAngleFromWheel: []
+    _bossLevelData:
+      _availableKnives: 0
+      _appleChance: 0
+      _rotationPattern: []
+      _appleAngleFromWheel: []
+      _knifeAngleFromWheel: []
+      _name: 
+  - _simpleLevelData:
+      _availableKnives: 0
+      _appleChance: 0
+      _rotationPattern: []
+      _appleAngleFromWheel: []
+      _knifeAngleFromWheel: []
+    _bossLevelData:
+      _availableKnives: 0
+      _appleChance: 0
+      _rotationPattern: []
+      _appleAngleFromWheel: []
+      _knifeAngleFromWheel: []
+      _name: 
+  - _simpleLevelData:
+      _availableKnives: 0
+      _appleChance: 0
+      _rotationPattern: []
+      _appleAngleFromWheel: []
+      _knifeAngleFromWheel: []
+    _bossLevelData:
+      _availableKnives: 0
+      _appleChance: 0
+      _rotationPattern: []
+      _appleAngleFromWheel: []
+      _knifeAngleFromWheel: []
+      _name: 
+  - _simpleLevelData:
+      _availableKnives: 0
+      _appleChance: 0
+      _rotationPattern: []
+      _appleAngleFromWheel: []
+      _knifeAngleFromWheel: []
+    _bossLevelData:
+      _availableKnives: 0
+      _appleChance: 0
+      _rotationPattern: []
+      _appleAngleFromWheel: []
+      _knifeAngleFromWheel: []
+      _name: 
+  - _simpleLevelData:
+      _availableKnives: 0
+      _appleChance: 0
+      _rotationPattern: []
+      _appleAngleFromWheel: []
+      _knifeAngleFromWheel: []
+    _bossLevelData:
+      _availableKnives: 0
+      _appleChance: 0
+      _rotationPattern: []
+      _appleAngleFromWheel: []
+      _knifeAngleFromWheel: []
+      _name: 
