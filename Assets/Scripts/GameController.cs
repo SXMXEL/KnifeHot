@@ -26,6 +26,7 @@ public class GameController : MonoBehaviour
     {
         _dataManager = new DataManager();
         _scoreManager = new ScoreManager(_dataManager);
+        _pageManager.PageState = PageState.MenuPage;
         _soundManager.Init(_dataManager);
         _menuUIManager.Init(
             _levelManager,

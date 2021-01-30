@@ -11,7 +11,8 @@ public enum PageState
 
 public class PageManager : MonoBehaviour
 {
-    [Header("Pages")] [SerializeField] private GameObject _menuPage;
+    [Header("Pages")] 
+    [SerializeField] private GameObject _menuPage;
     [SerializeField] private GameObject _gamePage;
     [SerializeField] private GameObject _game;
     [SerializeField] private GameObject _gameOverPage;

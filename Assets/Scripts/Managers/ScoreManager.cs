@@ -1,43 +1,43 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class ScoreManager
+﻿namespace Managers
 {
-    public bool IsGameOver { get; set; }
-
-    public int Score
+    public class ScoreManager
     {
-        get => _score;
-        set
+        public ScoreManager(DataManager dataManager)
         {
-            _score = value;
-            if (_score > _dataManager.HighScore)
+            _dataManager = dataManager;
+        }
+        public bool IsGameOver { get; set; }
+
+        public int Score
+        {
+            get => _score;
+            set
             {
-                _dataManager.HighScore = _score;
+                _score = value;
+                if (_score > _dataManager.HighScore)
+                {
+                    _dataManager.HighScore = _score;
+                }
             }
         }
-    }
 
-    public int Stage
-    {
-        get => _stage;
-        set
+        public int Stage
         {
-            _stage = value;
-            if (_stage > _dataManager.HighStage)
+            get => _stage;
+            set
             {
-                _dataManager.HighStage = _stage;
+                _stage = value;
+                if (_stage > _dataManager.HighStage)
+                {
+                    _dataManager.HighStage = _stage;
+                }
             }
         }
-    }
 
-    private readonly DataManager _dataManager;
-    private int _score;
-    private int _stage;
+        private readonly DataManager _dataManager;
+        private int _score;
+        private int _stage;
 
-    public ScoreManager(DataManager dataManager)
-    {
-        _dataManager = dataManager;
+    
     }
 }

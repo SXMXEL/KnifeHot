@@ -12,7 +12,8 @@ namespace Items
         public Image KnifeImage => _knifeImage;
         public int Index { get; private set; }
 
-        [Header("Images")] [SerializeField] private Image _backgroundImage;
+        [Header("Images")]
+        [SerializeField] private Image _backgroundImage;
         [SerializeField] private Image _knifeImage;
         [SerializeField] private Image _unlockImage;
 

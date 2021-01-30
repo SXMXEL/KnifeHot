@@ -87,6 +87,7 @@ namespace Items
                 Collider.offset = new Vector2(Collider.offset.x, -0.4f);
                 Collider.size = new Vector2(Collider.size.x, 1.2f);
                 _soundManager.PlayWheelHit();
+                _gameUIManager.UpdateScore();
                 other.gameObject.GetComponent<Level>().KnifeHit(this);
             }
             else if (
@@ -95,7 +96,7 @@ namespace Items
                 && !_scoreManager.IsGameOver
             )
             {
-                Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, -2);
+                // Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, -2);
                 _soundManager.PlayKnifeHit();
                 _soundManager.PlayGameOver();
                 _soundManager.Vibrate();

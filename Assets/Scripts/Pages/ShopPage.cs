@@ -14,10 +14,12 @@ namespace Pages
         [SerializeField] private ShopKnife shopKnifePrefab;
         [SerializeField] private GameObject _shopContainer;
 
-        [Header("Text")] [SerializeField] private TextMeshProUGUI _counter;
+        [Header("Text")] 
+        [SerializeField] private TextMeshProUGUI _counter;
         [SerializeField] private TextMeshProUGUI _price;
 
-        [Header("Knives")] [SerializeField] private Image _knifeUnlocked;
+        [Header("Knives")] 
+        [SerializeField] private Image _knifeUnlocked;
         [SerializeField] private Image _knifeLocked;
 
         [SerializeField] private Button _unlockKnifeButton;
@@ -81,8 +83,8 @@ namespace Pages
             for (int i = 0; i < Knives.Length; i++)
             {
                 var item = Instantiate(shopKnifePrefab, _shopContainer.transform);
-                item.Setup(i, this);
                 item.Init(_dataManager, OnItemSelected);
+                item.Setup(i, this);
                 _shopItems.Add(item);
             }
 
@@ -94,7 +96,6 @@ namespace Pages
             _selected = selectedKnife;
             _price.text = _selected.Price.ToString();
             UpdateShopUI();
-            
         }
 
         private void UnlockKnife()

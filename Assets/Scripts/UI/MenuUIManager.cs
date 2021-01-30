@@ -1,4 +1,5 @@
 ﻿using System;
+using DG.Tweening;
 using Managers;
 using Pages;
 using TMPro;
@@ -11,9 +12,8 @@ namespace UI
     {
         public ShopPage ShopPage => shopPage;
 
-        [Header("UI items managers")] [SerializeField]
-        private ShopPage shopPage;
-
+        [Header("UI items managers")] 
+        [SerializeField] private ShopPage shopPage;
         [SerializeField] private RewardUI _rewardUI;
         [SerializeField] private RewardTimeManager rewardTimeTimeManager;
 
@@ -25,10 +25,14 @@ namespace UI
         [SerializeField] private TextMeshProUGUI _totalApplesText;
         [SerializeField] private GameObject[] _effects;
 
-        [Header("Text")] [SerializeField] private TextMeshProUGUI _highStage;
+        [Header("Text")] 
+        [SerializeField] private TextMeshProUGUI _highStage;
         [SerializeField] private TextMeshProUGUI _highScore;
+        [SerializeField] private TextMeshProUGUI _knifeText;
+        [SerializeField] private TextMeshProUGUI _hotText;
 
-        [Header("Buttons")] [SerializeField] private Button _playButton;
+        [Header("Buttons")] 
+        [SerializeField] private Button _playButton;
         [SerializeField] private Button _ShopBackToMenuButton;
         [SerializeField] private Button _SettingsBackToMenuButton;
         [SerializeField] private Button _settingsButton;
@@ -36,12 +40,15 @@ namespace UI
         [SerializeField] private Button _vibrateButton;
         [SerializeField] private Button _shopButton;
 
+        [SerializeField] private Transform _bottomButtons;
 
         private SoundManager _soundManager;
         private ScoreManager _scoreManager;
         private DataManager _dataManager;
         private PageManager _pageManager;
         private LevelManager _levelManager;
+        private Sequence _startAnimation;
+        private Sequence _hotTextSequence;
 
         public float ScreenHeight => Camera.main.orthographicSize * 2;
         public float ScreenWidth => ScreenHeight / Screen.height * Screen.width;
@@ -113,6 +120,62 @@ namespace UI
             });
             UpdateSoundsUI();
             UpdateVibrationUI();
+            StartAnimation();
+        }
+
+        private void StartAnimation()
+        {
+            var delay = 2f;
+            var knifeTextPosition = _knifeText.transform.position;
+            var hotTextPosition = _hotText.transform.position;
+            var bottomButtonsPosition = _bottomButtons.transform.position;
+            _settingsButton.gameObject.SetActive(false);
+            _totalApplesText.gameObject.SetActive(false);
+            _highScore.gameObject.SetActive(false);
+            _highStage.gameObject.SetActive(false);
+            _selectedKnife.gameObject.SetActive(false);
+            _playButton.gameObject.SetActive(false);
+            _bottomButtons.gameObject.SetActive(false);
+            _knifeText.gameObject.SetActive(false);
+            _hotText.gameObject.SetActive(false);
+            _startAnimation?.Kill();
+            _startAnimation = DOTween.Sequence();
+            _startAnimation.Append(_selectedKnife.transform.DOLocalMove(new Vector3(0,-500,0), 0.1f));
+            _startAnimation.AppendCallback(()=> _selectedKnife.gameObject.SetActive(true));
+            _startAnimation.Append(_selectedKnife.transform
+                    .DOLocalMove(new Vector3(0,0,0),delay))
+                    .SetEase(Ease.OutBounce);
+            _startAnimation.Append(_knifeText.transform
+                .DOMove(new Vector3(-12.5f, knifeTextPosition.y, knifeTextPosition.z), 0.1f ));
+            _startAnimation.Join(_hotText.transform
+                .DOMove(new Vector3(12.5f, hotTextPosition.y, hotTextPosition.z), 0.1f));
+            _startAnimation.AppendCallback(() =>
+            {
+                _knifeText.gameObject.SetActive(true);
+                _hotText.gameObject.SetActive(true);
+            });
+            _startAnimation.Append(_knifeText.transform
+                    .DOMove(new Vector3(0, knifeTextPosition.y, knifeTextPosition.z), delay))
+                .SetEase(Ease.OutBack);
+            _startAnimation.Join(_hotText.transform
+                    .DOMove(new Vector3(0, hotTextPosition.y, hotTextPosition.z), delay))
+                .SetEase(Ease.OutBack);
+            _startAnimation.AppendCallback(()=> _playButton.gameObject.SetActive(true));
+            _startAnimation.Append(_playButton.transform.DOShakePosition(delay, 20));
+            _startAnimation.Append(_bottomButtons.transform.DOMove(new Vector3(0,-500,0), 0.1f));
+            _startAnimation.AppendCallback(() => _bottomButtons.gameObject.SetActive(true));
+            _startAnimation.Append(_bottomButtons.transform
+                    .DOMove(bottomButtonsPosition, delay))
+                    .SetEase(Ease.OutBack);
+            _startAnimation.AppendCallback(() =>
+            {
+                _settingsButton.gameObject.SetActive(true);
+                _totalApplesText.gameObject.SetActive(true);
+                _highScore.gameObject.SetActive(true);
+                _highStage.gameObject.SetActive(true);
+            });
+            // _knifeTextSequence.Append(_knifeText.transform.DOShakePosition())
+            _startAnimation.Play();
         }
 
         private void Update()

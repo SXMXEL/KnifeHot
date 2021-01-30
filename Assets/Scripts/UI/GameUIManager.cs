@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using Managers;
 using Pages;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace UI
@@ -18,6 +17,7 @@ namespace UI
         [SerializeField] private TextMeshProUGUI _stageText;
         [SerializeField] private Color _stageCompletedColor;
         [SerializeField] private Color _stageNormalColor;
+        [SerializeField] private Color _bossfightColor;
         [SerializeField] private List<Image> _stageIcons;
         [SerializeField] private GamePage _gamePage;
 
@@ -83,21 +83,9 @@ namespace UI
         }
 
 
-        private void Update()
+        public void UpdateScore()
         {
             _scoreText.text = _scoreManager.Score.ToString();
-            _stageText.text = "Stage " + _scoreManager.Stage;
-            UpdateUI();
-
-            EffectRotate(BossFightObject.activeInHierarchy, _bossFightEffects);
-            EffectRotate(BossDefeatedObject.activeInHierarchy, _bossDefeatedEffects);
-        }
-
-        private void EffectRotate(bool isActive, GameObject[] effects)
-        {
-            if (!isActive) return;
-            effects[0].transform.Rotate(0, 0, 40 * Time.deltaTime);
-            effects[1].transform.Rotate(0, 0, -40 * Time.deltaTime);
         }
 
         public void BossFightRotate()
@@ -121,7 +109,7 @@ namespace UI
                 effect.transform.localRotation = Quaternion.identity;
                 sequence.Join(
                         effect.transform.DORotate(
-                            Vector3.forward * (90 * (((i + 1) % 2 == 0) ? 1 : -1)),
+                            Vector3.forward * (90 * ((i + 1) % 2 == 0 ? 1 : -1)),
                             3f))
                     .SetLoops(1, LoopType.Incremental)
                     .SetEase(Ease.Linear);
@@ -131,21 +119,6 @@ namespace UI
             sequence.Play();
         }
 
-        // public void BossFight()
-        // {
-        //     _bossFight.SetActive(true);
-        //     yield return new WaitForSeconds(1);
-        //     _bossFight.SetActive(false);
-        // }
-        //
-        // public void BossDefeated()
-        // {
-        //     _bossDefeated.SetActive(true);
-        //     yield return new WaitForSeconds(1);
-        //     _bossDefeated.SetActive(false);
-        //     
-        // }
-
         public void GameOver()
         {
             _levelManager.IsInitialized = false;
@@ -153,7 +126,6 @@ namespace UI
             _gameOverScore.text = _scoreManager.Score.ToString();
             _gameOverStage.text = "Stage " + _scoreManager.Stage;
             Debug.Log("game over");
-            _levelManager.RestartUI();
         }
 
 
@@ -165,27 +137,46 @@ namespace UI
             }
 
             _pageManager.PageState = PageState.GamePage;
-            // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
 
-        private void UpdateUI()
+        public void UpdateUI()
         {
+            if (_scoreManager.Stage % 5 != 0)
+            {
+                if (_stageText.color != Color.white)
+                {
+                    _stageText.color = Color.white;
+                }
+
+                _stageText.text = "Stage " + _scoreManager.Stage;
+            }
+
             if (_scoreManager.Stage % 5 == 0)
             {
                 foreach (var icon in _stageIcons)
                 {
                     icon.gameObject.SetActive(false);
-                    _stageIcons[_stageIcons.Count - 1].color = _stageNormalColor;
-                    _stageText.text = _levelManager.BossName;
                 }
+                
+                _stageIcons[_stageIcons.Count - 1].color = _stageNormalColor;
+                _stageText.text = _levelManager.BossName.ToUpper();
+                _stageText.color = Color.red;
+                var bossFightIcon = _stageIcons.Last();
+                bossFightIcon.gameObject.SetActive(true);
+                bossFightIcon.color = _bossfightColor;
             }
             else
             {
                 for (int i = 0; i < _stageIcons.Count; i++)
                 {
-                    _stageIcons[i].gameObject.SetActive(true);
+                    if (_stageIcons[i].gameObject.activeSelf == false)
+                    {
+                        _stageIcons[i].gameObject.SetActive(true);
+                    }
+
                     _stageIcons[i].color = _scoreManager.Stage % 5 <= i ? _stageNormalColor : _stageCompletedColor;
+                    
                 }
             }
         }

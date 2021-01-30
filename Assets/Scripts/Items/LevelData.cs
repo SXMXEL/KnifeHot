@@ -29,15 +29,15 @@ namespace Items
     {
         public int AvailableKnives => _availableKnives;
         public float AppleChance => _appleChance;
-        public List<float> AppleAngleFromWheel => _appleAngleFromWheel;
-        public List<float> KnifeAngleFromWheel => _knifeAngleFromWheel;
+        // public List<float> AppleAngleFromWheel => _appleAngleFromWheel;
+        // public List<float> KnifeAngleFromWheel => _knifeAngleFromWheel;
         public RotationElement[] RotationPattern => _rotationPattern;
         
         [SerializeField] private int _availableKnives;
         [SerializeField] [Range(0, 1)] private float _appleChance;
         [SerializeField] private RotationElement[] _rotationPattern;
-        [SerializeField] private List<float> _appleAngleFromWheel;
-        [SerializeField] private List<float> _knifeAngleFromWheel;
+        // [SerializeField] private List<float> _appleAngleFromWheel;
+        // [SerializeField] private List<float> _knifeAngleFromWheel;
     }
 
     [Serializable]

@@ -12,7 +12,7 @@ namespace Managers
     public class LevelManager : MonoBehaviour
     {
         public bool IsInitialized;
-        public string BossName;
+        [HideInInspector]public string BossName;
         private int _totalSpawnKnife { get; set; }
 
         [SerializeField] private KnifeCounter _knifeCounter;
@@ -22,6 +22,7 @@ namespace Managers
         [SerializeField] private KnifeFactory _knifeFactory;
         [SerializeField] private Knife _knifePrefab;
         [SerializeField] private Level _levelPrefab;
+        [SerializeField] private GameObject _blocker;
 
         [Header("Wheel settings")] [SerializeField]
         private Transform _wheelSpawnPosition;
@@ -32,14 +33,14 @@ namespace Managers
         private Transform _knifeSpawnPosition;
 
         [Range(0, 1)] [SerializeField] private float _knifeScale;
-
         private LevelData _currentLevelData;
         private bool _isNextLevelInit;
         private Level _currentLevel;
         private Knife _currentKnife;
-        private Sequence _rotateSequence;
+        private Sequence _levelScaleSequence;
         private Sequence _bossFightSequence;
         private Sequence _bossDefeatedSequence;
+        private Sequence _knifeScaleSequence;
 
         private float _screenWidth => _menuUIManager.ScreenWidth;
         private float _screenHeight => _menuUIManager.ScreenHeight;
@@ -123,7 +124,8 @@ namespace Managers
             _scoreManager.Score = 0;
             _scoreManager.Stage = 1;
             IsInitialized = true;
-            StartCoroutine(GenerateKnife());
+
+            new DelayWrappedCommand(() => StartCoroutine(GenerateKnife()), 0.2f).Started();
             SetupGame();
         }
 
@@ -138,10 +140,19 @@ namespace Managers
             {
                 levelBaseData = _currentLevelData.BossLevelData;
                 var bossLevelData = (BossLevelData) levelBaseData;
+                BossName = "BOSS: " + bossLevelData.Name;
             }
 
+            _gameUIManager.UpdateUI();
             GenerateLevel(levelBaseData);
-            _knifeCounter.SetupKnife(_currentLevel.AvailableKnives);
+
+            var delay = 2.05f;
+            if (_scoreManager.Stage == 1)
+            {
+                delay = 0.15f;
+            }
+
+            new DelayWrappedCommand(() => _knifeCounter.SetupKnife(_currentLevel.AvailableKnives), delay).Started();
         }
 
 
@@ -154,18 +165,21 @@ namespace Managers
 
         private IEnumerator GenerateKnife()
         {
-            yield return new WaitUntil(() => _knifeSpawnPosition.childCount == 0);
+            yield return new WaitUntil(() => _knifeSpawnPosition.childCount == 0 );
             if (_currentLevel.AvailableKnives > _totalSpawnKnife && !_scoreManager.IsGameOver)
             {
                 _totalSpawnKnife++;
                 Debug.Log("Generate knife");
                 _knifeFactory.Init(_knifeSpawnPosition);
                 Knife knife;
+                
                 if (_selectedKnifePrefab == null)
                 {
-                    _knifeFactory.Prefab.GetComponent<SpriteRenderer>().sprite =
-                        _knifePrefab.GetComponent<SpriteRenderer>().sprite;
+                    // _knifeFactory.Prefab.GetComponent<SpriteRenderer>().sprite =
+                    //     _knifePrefab.GetComponent<SpriteRenderer>().sprite;
                     knife = _knifeFactory.GetKnife();
+                    knife.GetComponent<SpriteRenderer>().sprite = 
+                        _knifePrefab.GetComponent<SpriteRenderer>().sprite;
                     var velocity = _knifePrefab.Rigidbody.velocity;
                     knife.Rigidbody.velocity = new Vector2(velocity.x, velocity.y);
                     knife.Rigidbody.gravityScale = 0;
@@ -174,9 +188,12 @@ namespace Managers
                 }
                 else
                 {
-                    _knifeFactory.Prefab.GetComponent<SpriteRenderer>().sprite =
-                        _selectedKnifePrefab.GetComponent<SpriteRenderer>().sprite;
+                    
+                    // _knifeFactory.Prefab.GetComponent<SpriteRenderer>().sprite =
+                    //     _selectedKnifePrefab.GetComponent<SpriteRenderer>().sprite;
                     knife = _knifeFactory.GetKnife();
+                    knife.GetComponent<SpriteRenderer>().sprite = 
+                        _selectedKnifePrefab.GetComponent<SpriteRenderer>().sprite;
                     var velocity = _selectedKnifePrefab.Rigidbody.velocity;
                     knife.Rigidbody.velocity = new Vector2(velocity.x, velocity.y);
                     knife.Rigidbody.gravityScale = 0;
@@ -190,9 +207,15 @@ namespace Managers
                     knife.Rigidbody.bodyType = RigidbodyType2D.Dynamic;
                     knife.Hit = false;
                 }
-
-
+                
                 var knifeTransform = knife.transform;
+                knife.gameObject.SetActive(false);
+                _knifeScaleSequence?.Kill();
+                _knifeScaleSequence = DOTween.Sequence();
+                _knifeScaleSequence.Append(knifeTransform.DOScale(Vector3.zero, 0.1f));
+                _knifeScaleSequence.AppendCallback(() => knife.gameObject.SetActive(true));
+                _knifeScaleSequence.Append(knifeTransform.DOScale(Vector3.one, 0.3f)).SetEase(Ease.OutBack);
+                _knifeScaleSequence.Play();
                 knifeTransform.SetParent(_knifeSpawnPosition);
                 knifeTransform.position = _knifeSpawnPosition.position;
                 knife.gameObject.SetActive(true);
@@ -206,11 +229,13 @@ namespace Managers
 
         private void NextLevel()
         {
+            _blocker.SetActive(true);
+            new DelayWrappedCommand(()=> _blocker.SetActive(false), 2.2f).Started();
             if (_isNextLevelInit)
             {
                 return;
             }
-
+            
             _soundManager.VibrateVictory();
             Debug.Log("Next level");
 
@@ -287,45 +312,54 @@ namespace Managers
                 }
 
                 _currentLevel.Dispose();
+
                 Debug.Log("Current level: " + _scoreManager.Stage);
             }
 
-            _currentLevel.Init(_scoreManager, levelBaseData);
+            var delay = 2f;
 
-            if (_currentLevel.AppleChance >= Random.value)
+            if (_scoreManager.Stage == 1)
             {
-                _appleFactory.Init(_currentLevel.transform);
-                _currentLevel.SpawnApple(_dataManager, _soundManager, _appleFactory);
+                delay = 0.1f;
             }
 
-            _knifeFactory.Init(_currentLevel.transform);
-            _currentLevel.SpawnKnives(_obstacleKnifeFactory);
-            _currentLevel.name = "Level " + _scoreManager.Stage;
-
-            // while (_scoreManager.IsGameOver == false)
-            // {
-            //     
-            //     var rotationIndex = 0;
-            if (_currentLevel.gameObject.activeInHierarchy)
+            new DelayWrappedCommand(() =>
             {
-                _rotateSequence?.Kill();
-                _rotateSequence = DOTween.Sequence();
-                _rotateSequence.Append(
-                        _currentLevel.gameObject.transform.DORotate(
-                            new Vector3(0, 0, 180) * levelBaseData.RotationPattern[0].SpeedAndDirection,
-                            levelBaseData.RotationPattern[0].Duration, RotateMode.FastBeyond360))
-                    .SetLoops(-1, LoopType.Incremental)
-                    .SetEase(levelBaseData.RotationPattern[0].Ease);
-                _rotateSequence.SetLoops(-1);
-                _rotateSequence.Play();
-            }
+                _currentLevel.Init(_scoreManager, levelBaseData);
+                _currentLevel.gameObject.SetActive(false);
+                _levelScaleSequence?.Kill();
+                _levelScaleSequence = DOTween.Sequence();
+                _levelScaleSequence.Append(_currentLevel.transform.DOScale(Vector3.zero, 0.1f));
+                _levelScaleSequence.AppendCallback(()=> _currentLevel.gameObject.SetActive(true));
+                _levelScaleSequence.Append(_currentLevel.transform.DOScale(Vector3.one, 0.3f))
+                    .SetEase(Ease.OutBack);
+                _levelScaleSequence.Play();
+                
+                if (_currentLevel.AppleChance >= Random.value)
+                {
+                    _appleFactory.Init(_currentLevel.transform);
+                    new DelayWrappedCommand(
+                        ()=>_currentLevel.SpawnApple(_dataManager, _soundManager, _appleFactory), 0.95f)
+                        .Started();
+                }
+                
+                _knifeFactory.Init(_currentLevel.transform);
+                _currentLevel.SpawnKnives(_obstacleKnifeFactory);
+                _currentLevel.name = "Level " + _scoreManager.Stage;
 
-            // if (_)
-            // {
-            //     rotationIndex++;
-            //     rotationIndex = rotationIndex < levelBaseData.RrotationPattern.Length ? rotationIndex : 0;
-            // }
-            // }
+                // while (_scoreManager.IsGameOver == false)
+                // {
+                //     
+                //     var rotationIndex = 0;
+
+
+                // if (_)
+                // {
+                //     rotationIndex++;
+                //     rotationIndex = rotationIndex < levelBaseData.RrotationPattern.Length ? rotationIndex : 0;
+                // }
+                // }
+            }, delay).Started();
         }
     }
 }
