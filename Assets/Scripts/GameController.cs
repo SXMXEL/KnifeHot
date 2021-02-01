@@ -10,8 +10,8 @@ public class GameController : MonoBehaviour
     [SerializeField] private PageManager _pageManager;
     [SerializeField] private LevelManager _levelManager;
     [SerializeField] private SoundManager _soundManager;
-    [SerializeField] private MenuUIManager _menuUIManager;
-    [SerializeField] private GameUIManager _gameUIManager;
+    [SerializeField] private MenuPage menuPage;
+    [SerializeField] private GamePage gamePage;
 
     private DataManager _dataManager;
     private ScoreManager _scoreManager;
@@ -28,13 +28,13 @@ public class GameController : MonoBehaviour
         _scoreManager = new ScoreManager(_dataManager);
         _pageManager.PageState = PageState.MenuPage;
         _soundManager.Init(_dataManager);
-        _menuUIManager.Init(
+        menuPage.Init(
             _levelManager,
             _dataManager,
             _soundManager,
             _scoreManager,
             _pageManager);
-        _gameUIManager.Init(
+        gamePage.Init(
             _soundManager,
             _scoreManager,
             _levelManager,
@@ -43,8 +43,8 @@ public class GameController : MonoBehaviour
             _dataManager,
             _soundManager,
             _scoreManager,
-            _menuUIManager,
-            _gameUIManager,
+            menuPage,
+            gamePage,
             _pageManager);
     }
 }

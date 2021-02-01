@@ -46,22 +46,18 @@ namespace UI
             if (_rewardTimeManager.CanRewardNow())
             {
                 int amount = _rewardTimeManager.GetRandomReward();
-                StartCoroutine(Reward());
+                Reward();
                 _rewardTimeManager.ResetRewardTime();
                 _dataManager.TotalApples += amount;
                 _soundManager.PlayAppleReward();
             }
         }
 
-        private IEnumerator Reward()
+        private void Reward()
         {
             _rewardPanel.SetActive(true);
-            yield return new WaitForSeconds(1);
-
-            Instantiate(_appleParticle);
-        
-            yield return new WaitForSeconds(3);
-            _rewardPanel.SetActive(false);
+            new DelayWrappedCommand(() => Instantiate(_appleParticle), 1f).Started();
+            new DelayWrappedCommand(()=> _rewardPanel.SetActive(false), 3f).Started();
         }
     }
 }

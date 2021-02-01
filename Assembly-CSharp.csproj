@@ -77,11 +77,10 @@
      <Compile Include="Assets\Scripts\Managers\ScoreManager.cs" />
      <Compile Include="Assets\Scripts\Managers\SoundManager.cs" />
      <Compile Include="Assets\Scripts\ObjectPool.cs" />
-     <Compile Include="Assets\Scripts\Pages\GamePage.cs" />
      <Compile Include="Assets\Scripts\Pages\Page.cs" />
      <Compile Include="Assets\Scripts\Pages\ShopPage.cs" />
-     <Compile Include="Assets\Scripts\UI\GameUIManager.cs" />
-     <Compile Include="Assets\Scripts\UI\MenuUIManager.cs" />
+     <Compile Include="Assets\Scripts\UI\GamePage.cs" />
+     <Compile Include="Assets\Scripts\UI\MenuPage.cs" />
      <Compile Include="Assets\Scripts\UI\RewardUI.cs" />
      <Compile Include="Assets\Vibration\Example\VibrationExample.cs" />
      <Compile Include="Assets\Vibration\Vibration.cs" />

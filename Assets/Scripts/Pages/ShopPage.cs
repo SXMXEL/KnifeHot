@@ -21,8 +21,10 @@ namespace Pages
         [Header("Knives")] 
         [SerializeField] private Image _knifeUnlocked;
         [SerializeField] private Image _knifeLocked;
-
+        
+        [Header("UI")]
         [SerializeField] private Button _unlockKnifeButton;
+        [SerializeField] private GameObject[] _effects;
 
 
         private List<ShopKnife> _shopItems;
@@ -32,6 +34,7 @@ namespace Pages
         private Image _selectedKnife;
         private SoundManager _soundManager;
         private Sequence _knifeIdleSequence;
+        private Sequence _effectsRotateSequence;
         private Knife _knifePrefab;
         private DataManager _dataManager;
         private ShopKnife _selected;
@@ -69,6 +72,21 @@ namespace Pages
                 .SetEase(Ease.InOutSine)
                 .SetLoops(int.MaxValue, LoopType.Yoyo));
             _knifeIdleSequence.Play();
+            _effectsRotateSequence?.Kill();
+            _effectsRotateSequence = DOTween.Sequence();
+            for (var i = 0; i < _effects.Length; i++)
+            {
+                var effect = _effects[i];
+                effect.transform.localRotation = Quaternion.identity;
+                _effectsRotateSequence.Join(
+                        effect.transform.DORotate(
+                            Vector3.forward * (90 * ((i + 1) % 2 == 0 ? 1 : -1)),
+                            3f))
+                    .SetLoops(1, LoopType.Incremental)
+                    .SetEase(Ease.Linear);
+            }
+
+            _effectsRotateSequence.Play();
         }
 
         protected override void OnHide()

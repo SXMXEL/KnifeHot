@@ -8,22 +8,22 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class MenuUIManager : MonoBehaviour
+    public class MenuPage : MonoBehaviour
     {
         public ShopPage ShopPage => shopPage;
 
-        [Header("UI items managers")] 
+        [Header("Items managers")] 
         [SerializeField] private ShopPage shopPage;
         [SerializeField] private RewardUI _rewardUI;
         [SerializeField] private RewardTimeManager rewardTimeTimeManager;
 
-        [Header("UI")] [SerializeField] private Image _selectedKnife;
+        [Header("UI")] 
+        [SerializeField] private Image _selectedKnife;
         [SerializeField] private GameObject _soundOn;
         [SerializeField] private GameObject _soundOff;
         [SerializeField] private GameObject _vibrateOn;
         [SerializeField] private GameObject _vibrateOff;
         [SerializeField] private TextMeshProUGUI _totalApplesText;
-        [SerializeField] private GameObject[] _effects;
 
         [Header("Text")] 
         [SerializeField] private TextMeshProUGUI _highStage;
@@ -32,6 +32,7 @@ namespace UI
         [SerializeField] private TextMeshProUGUI _hotText;
 
         [Header("Buttons")] 
+        [SerializeField] private Button _rateButton;
         [SerializeField] private Button _playButton;
         [SerializeField] private Button _ShopBackToMenuButton;
         [SerializeField] private Button _SettingsBackToMenuButton;
@@ -73,6 +74,11 @@ namespace UI
                 _selectedKnife,
                 _soundManager,
                 _dataManager);
+            _rateButton.onClick.RemoveAllListeners();
+            _rateButton.onClick.AddListener(() =>
+            {
+                Application.OpenURL("https://github.com/SXMXEL/KnifeHot");
+            });
             _settingsButton.onClick.RemoveAllListeners();
             _settingsButton.onClick.AddListener(() =>
             {
@@ -125,10 +131,11 @@ namespace UI
 
         private void StartAnimation()
         {
-            var delay = 2f;
+            var delay = 0.5f;
             var knifeTextPosition = _knifeText.transform.position;
             var hotTextPosition = _hotText.transform.position;
             var bottomButtonsPosition = _bottomButtons.transform.position;
+            var selectedKnifePosition = _selectedKnife.transform.position;
             _settingsButton.gameObject.SetActive(false);
             _totalApplesText.gameObject.SetActive(false);
             _highScore.gameObject.SetActive(false);
@@ -140,33 +147,38 @@ namespace UI
             _hotText.gameObject.SetActive(false);
             _startAnimation?.Kill();
             _startAnimation = DOTween.Sequence();
-            _startAnimation.Append(_selectedKnife.transform.DOLocalMove(new Vector3(0,-500,0), 0.1f));
+            _startAnimation.Append(_selectedKnife.transform
+                    .DOMove(new Vector3(0,-7.5f,0), 0.1f));
             _startAnimation.AppendCallback(()=> _selectedKnife.gameObject.SetActive(true));
             _startAnimation.Append(_selectedKnife.transform
-                    .DOLocalMove(new Vector3(0,0,0),delay))
-                    .SetEase(Ease.OutBounce);
+                    .DOMove(selectedKnifePosition,delay).SetEase(Ease.OutBack));
             _startAnimation.Append(_knifeText.transform
-                .DOMove(new Vector3(-12.5f, knifeTextPosition.y, knifeTextPosition.z), 0.1f ));
+                    .DOMove(new Vector3(-10f, knifeTextPosition.y, knifeTextPosition.z), 0.1f ));
             _startAnimation.Join(_hotText.transform
-                .DOMove(new Vector3(12.5f, hotTextPosition.y, hotTextPosition.z), 0.1f));
+                    .DOMove(new Vector3(10f, hotTextPosition.y, hotTextPosition.z), 0.1f));
             _startAnimation.AppendCallback(() =>
             {
                 _knifeText.gameObject.SetActive(true);
                 _hotText.gameObject.SetActive(true);
             });
             _startAnimation.Append(_knifeText.transform
-                    .DOMove(new Vector3(0, knifeTextPosition.y, knifeTextPosition.z), delay))
-                .SetEase(Ease.OutBack);
+                    .DOMove(new Vector3(0, knifeTextPosition.y, knifeTextPosition.z), delay)
+                    .SetEase(Ease.OutBack));
             _startAnimation.Join(_hotText.transform
-                    .DOMove(new Vector3(0, hotTextPosition.y, hotTextPosition.z), delay))
-                .SetEase(Ease.OutBack);
+                    .DOMove(new Vector3(0, hotTextPosition.y, hotTextPosition.z), delay)
+                    .SetEase(Ease.OutBack));
+            _startAnimation.Append(_playButton.transform.DOScale(Vector3.zero, 0.1f));
             _startAnimation.AppendCallback(()=> _playButton.gameObject.SetActive(true));
-            _startAnimation.Append(_playButton.transform.DOShakePosition(delay, 20));
-            _startAnimation.Append(_bottomButtons.transform.DOMove(new Vector3(0,-500,0), 0.1f));
+            _startAnimation.Append(_playButton.transform
+                    .DOScale(Vector3.one, 0.9f)
+                    .SetEase(Ease.OutBack));
+            _startAnimation.Append(_bottomButtons.transform
+                    .DOMove(new Vector3(0,-12.5f,0), 0.1f)
+                    .SetEase(Ease.OutBack));
             _startAnimation.AppendCallback(() => _bottomButtons.gameObject.SetActive(true));
             _startAnimation.Append(_bottomButtons.transform
-                    .DOMove(bottomButtonsPosition, delay))
-                    .SetEase(Ease.OutBack);
+                    .DOMove(bottomButtonsPosition, delay)
+                    .SetEase(Ease.OutBack));
             _startAnimation.AppendCallback(() =>
             {
                 _settingsButton.gameObject.SetActive(true);
@@ -174,17 +186,13 @@ namespace UI
                 _highScore.gameObject.SetActive(true);
                 _highStage.gameObject.SetActive(true);
             });
-            // _knifeTextSequence.Append(_knifeText.transform.DOShakePosition())
+            // _startAnimation.Append(_knifeText.transform.Sha);
             _startAnimation.Play();
         }
 
         private void Update()
         {
-            if (shopPage.gameObject.activeInHierarchy)
-            {
-                _effects[0].transform.Rotate(0, 0, 40 * Time.deltaTime);
-                _effects[1].transform.Rotate(0, 0, -40 * Time.deltaTime);
-            }
+            
 
             _totalApplesText.text = _dataManager.TotalApples.ToString();
             _highScore.text = "SCORE " + _dataManager.HighScore;

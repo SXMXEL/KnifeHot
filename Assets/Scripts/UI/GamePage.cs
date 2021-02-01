@@ -9,39 +9,42 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class GameUIManager : MonoBehaviour
+    public class GamePage : MonoBehaviour
     {
-        [Header("UI Settings")] [SerializeField]
-        private TextMeshProUGUI _scoreText;
-
+        [Header("Settings")] 
+        [SerializeField] private TextMeshProUGUI _scoreText;
         [SerializeField] private TextMeshProUGUI _stageText;
         [SerializeField] private Color _stageCompletedColor;
         [SerializeField] private Color _stageNormalColor;
         [SerializeField] private Color _bossfightColor;
         [SerializeField] private List<Image> _stageIcons;
-        [SerializeField] private GamePage _gamePage;
 
-        [Header("UI Boss")] public GameObject BossFightObject;
+        [Header("Boss")] 
+        public GameObject BossFightObject;
         public GameObject BossDefeatedObject;
 
-        [Header("GameOver UI")] [SerializeField]
-        private TextMeshProUGUI _gameOverScore;
-
+        [Header("GameOver")] 
+        [SerializeField] private TextMeshProUGUI _gameOverScore;
         [SerializeField] private TextMeshProUGUI _gameOverStage;
+        [SerializeField] private GameObject _scorePanel;
+        [SerializeField] private GameObject _buttonsBar;
+        [SerializeField] private GameObject _homeText;
 
-        [Header("UI buttons")] [SerializeField]
-        private Button _homeButton;
-
+        [Header("Buttons")] 
+        [SerializeField] private Button _homeButton;
         [SerializeField] private Button _knifeFireButton;
         [SerializeField] private Button _restartButton;
         [SerializeField] private Button _optionsButton;
         [SerializeField] private Button _shopButton;
 
-        [Header("Effects")] [SerializeField] private GameObject[] _bossFightEffects;
+        [Header("Effects")] 
+        [SerializeField] private GameObject[] _bossFightEffects;
         [SerializeField] private GameObject[] _bossDefeatedEffects;
-
-        public Sequence FightSequence;
-        public Sequence DefeatedSequence;
+        
+        
+        private Sequence _gameOverAnimation;
+        private Sequence _fightSequence;
+        private Sequence _defeatedSequence;
         private SoundManager _soundManager;
         private ScoreManager _scoreManager;
         private LevelManager _levelManager;
@@ -57,7 +60,6 @@ namespace UI
             _scoreManager = scoreManager;
             _levelManager = levelManager;
             _pageManager = pageManager;
-            _gamePage.Init(_levelManager);
             _homeButton.onClick.RemoveAllListeners();
             _homeButton.onClick.AddListener(() =>
             {
@@ -90,12 +92,12 @@ namespace UI
 
         public void BossFightRotate()
         {
-            Rotate(FightSequence, _bossFightEffects, BossFightObject);
+            Rotate(_fightSequence, _bossFightEffects, BossFightObject);
         }
 
         public void BossDefeatedRotate()
         {
-            Rotate(DefeatedSequence, _bossDefeatedEffects, BossDefeatedObject);
+            Rotate(_defeatedSequence, _bossDefeatedEffects, BossDefeatedObject);
         }
 
         private void Rotate(Sequence sequence, GameObject[] effects, GameObject bossObject)
@@ -121,11 +123,49 @@ namespace UI
 
         public void GameOver()
         {
-            _levelManager.IsInitialized = false;
-            _pageManager.PageState = PageState.GameOverPage;
             _gameOverScore.text = _scoreManager.Score.ToString();
             _gameOverStage.text = "Stage " + _scoreManager.Stage;
             Debug.Log("game over");
+            var delay = 0.5f;
+            var scorePanelPosition = _scorePanel.transform.position;
+            var buttonsBarPosition = _buttonsBar.transform.position;
+            var homeTextPosition = _homeText.transform.position;
+            _levelManager.IsInitialized = false;
+            _homeButton.gameObject.SetActive(false);
+            _homeText.SetActive(false);
+            _scorePanel.SetActive(false);
+            _restartButton.gameObject.SetActive(false);
+            _buttonsBar.SetActive(false);
+            _pageManager.PageState = PageState.GameOverPage;
+            _gameOverAnimation?.Kill();
+            _gameOverAnimation = DOTween.Sequence();
+            _gameOverAnimation.Append(_scorePanel.transform
+                .DOMove(new Vector3(0,12.5f,0), 0.1f));
+            _gameOverAnimation.Join(_buttonsBar.transform
+                .DOMove(new Vector3(0,-12.5f,0), 0.1f));
+            _gameOverAnimation.AppendCallback(() =>
+            {
+                _scorePanel.SetActive(true);
+                _buttonsBar.SetActive(true);
+            });
+            _gameOverAnimation.Append(_scorePanel.transform
+                .DOMove(scorePanelPosition, delay)
+                .SetEase(Ease.OutBack));
+            _gameOverAnimation.Join(_buttonsBar.transform
+                .DOMove(buttonsBarPosition, delay)
+                .SetEase(Ease.OutBack));
+            _gameOverAnimation.Append(_restartButton.transform
+                .DOScale(Vector3.zero, 0.1f));
+            _gameOverAnimation.AppendCallback(() => _restartButton.gameObject.SetActive(true));
+            _gameOverAnimation.Append(_restartButton.transform
+                .DOScale(Vector3.one, delay)
+                .SetEase(Ease.OutBack));
+            _gameOverAnimation.AppendCallback(() =>
+            {
+                _homeButton.gameObject.SetActive(true);
+                _homeText.SetActive(true);
+            });
+            _gameOverAnimation.Play();
         }
 
 

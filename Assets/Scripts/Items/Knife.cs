@@ -22,19 +22,19 @@ namespace Items
 
         private SoundManager _soundManager;
         private ScoreManager _scoreManager;
-        private GameUIManager _gameUIManager;
+        private GamePage _gamePage;
         private bool _isObstacle;
         private Action<Knife> _returnObstacle;
 
         public void Init(
             ScoreManager scoreManager,
             SoundManager soundManager,
-            GameUIManager gameUIManager,
+            GamePage gamePage,
             Action<Knife> returnKnife)
         {
             _scoreManager = scoreManager;
             _soundManager = soundManager;
-            _gameUIManager = gameUIManager;
+            _gamePage = gamePage;
             _returnKnife = returnKnife;
             
             _isObstacle = false;
@@ -87,7 +87,7 @@ namespace Items
                 Collider.offset = new Vector2(Collider.offset.x, -0.4f);
                 Collider.size = new Vector2(Collider.size.x, 1.2f);
                 _soundManager.PlayWheelHit();
-                _gameUIManager.UpdateScore();
+                _gamePage.UpdateScore();
                 other.gameObject.GetComponent<Level>().KnifeHit(this);
             }
             else if (
@@ -102,7 +102,7 @@ namespace Items
                 _soundManager.Vibrate();
                 new DelayWrappedCommand(ReturnObject, 1f).Started();
                 _scoreManager.IsGameOver = true;
-                new DelayWrappedCommand(_gameUIManager.GameOver, 1.5f).Started();
+                new DelayWrappedCommand(_gamePage.GameOver, 1.5f).Started();
                 
             }
         }
