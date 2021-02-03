@@ -62,6 +62,7 @@ MonoBehaviour:
   _price: 0
   _innerButton: {fileID: 537140745897993862}
   _selectedImage: {fileID: 7143596780708402093}
+  IsForBoss: 0
 --- !u!114 &537140745897993862
 MonoBehaviour:
   m_ObjectHideFlags: 0

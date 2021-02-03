@@ -88,16 +88,16 @@ namespace Managers
         {
             if (_dataManager.VibrationSettings)
             {
-                // Handheld.Vibrate();
-                Vibration.VibratePop();
+                Handheld.Vibrate();
+                // Vibration.VibratePop();
             }
         }
         public void VibrateVictory()
         {
             if (_dataManager.VibrationSettings)
             {
-                // Handheld.Vibrate();
-                Vibration.VibratePeek();
+                Handheld.Vibrate();
+                // Vibration.VibratePeek();
             }
         }
     }

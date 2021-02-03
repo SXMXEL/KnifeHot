@@ -1,4 +1,5 @@
-﻿using Managers;
+﻿using System;
+using Managers;
 using UI;
 using UnityEngine;
 
@@ -13,9 +14,9 @@ public class GameController : MonoBehaviour
     [SerializeField] private MenuPage menuPage;
     [SerializeField] private GamePage gamePage;
 
+    private NotificationsManager _notificationsManager;
     private DataManager _dataManager;
     private ScoreManager _scoreManager;
-
 
     private void Awake()
     {
@@ -24,6 +25,7 @@ public class GameController : MonoBehaviour
     
     private void Init()
     {
+        _notificationsManager = new NotificationsManager();
         _dataManager = new DataManager();
         _scoreManager = new ScoreManager(_dataManager);
         _pageManager.PageState = PageState.MenuPage;
@@ -46,5 +48,18 @@ public class GameController : MonoBehaviour
             menuPage,
             gamePage,
             _pageManager);
+    }
+
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+        {
+            _notificationsManager.ScheduleNotification(DateTime.Now + new TimeSpan(8,0,0));
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        _notificationsManager.ScheduleNotification(DateTime.Now + new TimeSpan(0,0,10));
     }
 }

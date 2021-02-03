@@ -9,9 +9,7 @@ namespace Items
     {
         public int AvailableKnives => _availableKnives;
         public float AppleChance => _appleChance;
-        public Material _bottoms;
-        public Material _tls;
-        public Material _trs;
+        
         [Header("Prefabs")] [SerializeField] private Apple _applePrefab;
         [SerializeField] private Knife _knifePrefab;
         [SerializeField] private ParticleSystem _levelParticle, _levelTR, _levelTL;
@@ -40,7 +38,6 @@ namespace Items
         private ObstacleKnifeFactory _obstacleKnifeFactory;
         private AppleFactory _appleFactory;
         private DataManager _dataManager;
-        private static readonly int LiBottom = Shader.PropertyToID("LIBottom");
 
 
         public void Init(
@@ -129,7 +126,7 @@ namespace Items
                 _knifePrefab.Rigidbody.velocity = new Vector2(_knifePrefab.Rigidbody.velocity.x, -2);
 
                 SetRotationFromWheel(transform,
-                    knifeTmp.transform, knifeAngle, 0.1f, 180f);
+                    knifeTmp.transform, knifeAngle, 0.3f, 180f);
                 _obstacleKnives.Add(knifeTmp);
             }
         }
@@ -155,7 +152,7 @@ namespace Items
             }
 
             SetRotationFromWheel(transform,
-                tmpAppleTransform, appleAngle, 0.5f, 0f);
+                tmpAppleTransform, appleAngle, 0.4f, 0f);
             _apples.Add(appleTmp);
             // }
         }

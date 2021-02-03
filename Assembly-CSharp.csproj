@@ -72,6 +72,7 @@
      <Compile Include="Assets\Scripts\Managers\DataManager.cs" />
      <Compile Include="Assets\Scripts\Managers\KnifeCounter.cs" />
      <Compile Include="Assets\Scripts\Managers\LevelManager.cs" />
+     <Compile Include="Assets\Scripts\Managers\NotificationsManager.cs" />
      <Compile Include="Assets\Scripts\Managers\PageManager.cs" />
      <Compile Include="Assets\Scripts\Managers\RewardTimeManager.cs" />
      <Compile Include="Assets\Scripts\Managers\ScoreManager.cs" />
@@ -82,6 +83,10 @@
      <Compile Include="Assets\Scripts\UI\GamePage.cs" />
      <Compile Include="Assets\Scripts\UI\MenuPage.cs" />
      <Compile Include="Assets\Scripts\UI\RewardUI.cs" />
+     <Compile Include="Assets\SimpleAndroidNotifications\NotificationExample.cs" />
+     <Compile Include="Assets\SimpleAndroidNotifications\NotificationIcon.cs" />
+     <Compile Include="Assets\SimpleAndroidNotifications\NotificationManager.cs" />
+     <Compile Include="Assets\SimpleAndroidNotifications\NotificationParams.cs" />
      <Compile Include="Assets\Vibration\Example\VibrationExample.cs" />
      <Compile Include="Assets\Vibration\Vibration.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -100,6 +105,7 @@
      <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
+     <None Include="Assets\LunarConsole\readme.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
      <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
@@ -719,6 +725,14 @@
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
       <Project>{D9450BB8-9C26-F809-E22C-80992AB80559}</Project>
       <Name>Assembly-CSharp-firstpass</Name>
+    </ProjectReference>
+    <ProjectReference Include="LunarConsole.csproj">
+      <Project>{FBFD43BE-21E4-342F-D99D-BCC2652E2405}</Project>
+      <Name>LunarConsole</Name>
+    </ProjectReference>
+    <ProjectReference Include="LunarConsoleEditor.csproj">
+      <Project>{1AF351BA-D052-C515-DAB7-0947184A5414}</Project>
+      <Name>LunarConsoleEditor</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

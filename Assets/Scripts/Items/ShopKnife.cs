@@ -12,8 +12,7 @@ namespace Items
         public Image KnifeImage => _knifeImage;
         public int Index { get; private set; }
 
-        [Header("Images")]
-        [SerializeField] private Image _backgroundImage;
+        [Header("Images")] [SerializeField] private Image _backgroundImage;
         [SerializeField] private Image _knifeImage;
         [SerializeField] private Image _unlockImage;
 
@@ -32,6 +31,7 @@ namespace Items
         private Knife _knife;
         private Action<ShopKnife> _onItemSelected;
         private const string KNIFE_UNLOCKED = "KnifeUnlocked_";
+        public bool IsForBoss;
 
         public bool IsUnlocked
         {
@@ -44,7 +44,12 @@ namespace Items
 
                 return PlayerPrefs.GetInt(KNIFE_UNLOCKED + Index, 0) == 1;
             }
-            set => PlayerPrefs.SetInt(KNIFE_UNLOCKED + Index, value ? 1 : 0);
+            set
+            {
+                PlayerPrefs.SetInt(KNIFE_UNLOCKED + Index, value ? 1 : 0);
+                UpdateUI();
+                _shopPage.UpdateShopUI();
+            }
         }
 
         public bool IsSelected
@@ -75,11 +80,20 @@ namespace Items
             _innerButton.onClick.AddListener(OnItemClick);
         }
 
-        public void Setup(int index, ShopPage shopPage)
+        public void Setup(Knife[] knives, int index, ShopPage shopPage)
         {
             _shopPage = shopPage;
             Index = index;
-            _knife = _shopPage.Knives[Index];
+            if (IsForBoss)
+            {
+                _knife = knives[Index - _shopPage.AppleKnivesCount];
+            }
+            else
+            {
+                _knife = knives[Index];
+            }
+
+
             _knifeImage.sprite = _knife.GetComponent<SpriteRenderer>().sprite;
             UpdateUI();
         }

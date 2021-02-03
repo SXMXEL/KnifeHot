@@ -49,7 +49,7 @@ namespace UI
                 Reward();
                 _rewardTimeManager.ResetRewardTime();
                 _dataManager.TotalApples += amount;
-                _soundManager.PlayAppleReward();
+                new DelayWrappedCommand(()=> _soundManager.PlayAppleReward(), 0.5f).Started();
             }
         }
 

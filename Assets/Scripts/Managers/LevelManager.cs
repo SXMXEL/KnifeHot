@@ -281,6 +281,9 @@ namespace Managers
 
         private void BossDefeated()
         {
+            _menuPage.ShopPage.
+                ShopItems[_currentLevelData.BossLevelData.BossKnifeIndex
+                          + _menuPage.ShopPage.AppleKnivesCount].IsUnlocked = true;
             _currentLevel.gameObject.SetActive(false);
             _gamePage.BossDefeatedObject.SetActive(true);
             _soundManager.PlayBossFightEnd();

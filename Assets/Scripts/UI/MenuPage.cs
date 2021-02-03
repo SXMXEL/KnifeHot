@@ -192,8 +192,6 @@ namespace UI
 
         private void Update()
         {
-            
-
             _totalApplesText.text = _dataManager.TotalApples.ToString();
             _highScore.text = "SCORE " + _dataManager.HighScore;
             _highStage.text = "STAGE " + _dataManager.HighStage;

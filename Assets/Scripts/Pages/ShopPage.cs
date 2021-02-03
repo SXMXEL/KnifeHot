@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using Items;
 using Managers;
@@ -11,26 +12,28 @@ namespace Pages
     public class ShopPage : Page
     {
         public Knife SelectedKnifePrefab { get; private set; }
+        public ShopKnife ShopKnifeSelected { get; set; }
+        [HideInInspector] public List<ShopKnife> ShopItems => _shopItems;
+        [HideInInspector] public int AppleKnivesCount;
         [SerializeField] private ShopKnife shopKnifePrefab;
-        [SerializeField] private GameObject _shopContainer;
+        [SerializeField] private RectTransform _appleKnivesContainer;
+        [SerializeField] private RectTransform _bossKnivesContainer;
 
-        [Header("Text")] 
-        [SerializeField] private TextMeshProUGUI _counter;
+        [Header("Text")] [SerializeField] private TextMeshProUGUI _counter;
         [SerializeField] private TextMeshProUGUI _price;
 
-        [Header("Knives")] 
-        [SerializeField] private Image _knifeUnlocked;
+        [Header("Knives")] [SerializeField] private Image _knifeUnlocked;
         [SerializeField] private Image _knifeLocked;
-        
-        [Header("UI")]
-        [SerializeField] private Button _unlockKnifeButton;
+        [SerializeField] private Knife[] _appleKnives;
+        [SerializeField] private Knife[] _bossKnives;
+
+        [Header("UI")] [SerializeField] private Button _unlockKnifeButton;
         [SerializeField] private GameObject[] _effects;
 
 
         private List<ShopKnife> _shopItems;
 
-        public Knife[] Knives;
-        public ShopKnife ShopKnifeSelected { get; set; }
+        
         private Image _selectedKnife;
         private SoundManager _soundManager;
         private Sequence _knifeIdleSequence;
@@ -82,7 +85,7 @@ namespace Pages
                         effect.transform.DORotate(
                             Vector3.forward * (90 * ((i + 1) % 2 == 0 ? 1 : -1)),
                             3f))
-                    .SetLoops(1, LoopType.Incremental)
+                    .SetLoops(-1, LoopType.Incremental)
                     .SetEase(Ease.Linear);
             }
 
@@ -98,11 +101,23 @@ namespace Pages
         private void Setup()
         {
             _shopItems = new List<ShopKnife>();
-            for (int i = 0; i < Knives.Length; i++)
+            for (int i = 0; i < _appleKnives.Length; i++)
             {
-                var item = Instantiate(shopKnifePrefab, _shopContainer.transform);
+                var item = Instantiate(shopKnifePrefab, _appleKnivesContainer);
                 item.Init(_dataManager, OnItemSelected);
-                item.Setup(i, this);
+                item.IsForBoss = false;
+                item.Setup(_appleKnives, i, this);
+                _shopItems.Add(item);
+            }
+
+            AppleKnivesCount = _appleKnives.Length;
+
+            for (int i = _appleKnives.Length; i < _bossKnives.Length + _appleKnives.Length; i++)
+            {
+                var item = Instantiate(shopKnifePrefab, _bossKnivesContainer);
+                item.Init(_dataManager, OnItemSelected);
+                item.IsForBoss = true;
+                item.Setup(_bossKnives, i, this);
                 _shopItems.Add(item);
             }
 
@@ -118,7 +133,12 @@ namespace Pages
 
         private void UnlockKnife()
         {
-            if (_dataManager.TotalApples > _selected.Price)
+            if (_selected.IsUnlocked == true)
+            {
+                return;
+            }
+            
+            if (_dataManager.TotalApples > _selected.Price && _selected.IsForBoss == false)
             {
                 _dataManager.TotalApples -= _selected.Price;
                 _selected.IsUnlocked = true;
@@ -129,7 +149,7 @@ namespace Pages
             }
         }
 
-        private void UpdateShopUI()
+        public void UpdateShopUI()
         {
             var sprite = _selected.KnifeImage.sprite;
             _knifeUnlocked.sprite = sprite;
@@ -140,9 +160,11 @@ namespace Pages
 
             var itemsUnlocked = _shopItems.FindAll(x => x.IsUnlocked).Count;
 
-            _counter.text = itemsUnlocked + "/" + Knives.Length;
+            _counter.text = itemsUnlocked + "/" + _appleKnives.Length + _bossKnives.Length;
 
-            SelectedKnifePrefab = Knives[_dataManager.SelectedKnifeIndex];
+            SelectedKnifePrefab = _selected.IsForBoss ?
+                _bossKnives[_dataManager.SelectedKnifeIndex - _appleKnives.Length] 
+                : _appleKnives[_dataManager.SelectedKnifeIndex];
 
             _selectedKnife.sprite =
                 SelectedKnifePrefab.GetComponent<SpriteRenderer>().sprite;

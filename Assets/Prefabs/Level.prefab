@@ -96,9 +96,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db0848111e500604fa90027379ae5581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bottoms: {fileID: 0}
-  _tls: {fileID: 0}
-  _trs: {fileID: 0}
   _applePrefab: {fileID: 1288280692388253464, guid: c9180a55ebc6248408a6718b319e98d3,
     type: 3}
   _knifePrefab: {fileID: 2232576891765242490, guid: caaaa4a507b0dfb4f9e59490e48fd520,
@@ -122,7 +119,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1.4
+  m_Radius: 1.2
 --- !u!1001 &2477375733352017616
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -50,6 +50,9 @@ namespace Items
     public class BossLevelData : LevelBaseData
     {
         public string Name => _name;
+        public int BossKnifeIndex => _bossKnifeIndex;
+
+        [SerializeField] private int _bossKnifeIndex;
         [SerializeField] private string _name;
     }
 }
