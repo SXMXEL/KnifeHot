@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Reflection;
 using Managers;
 using UI;
 using UnityEngine;
@@ -96,7 +94,7 @@ namespace Items
                 && !_scoreManager.IsGameOver
             )
             {
-                // Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, -2);
+                Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, -2);
                 _soundManager.PlayKnifeHit();
                 _soundManager.PlayGameOver();
                 _soundManager.Vibrate();

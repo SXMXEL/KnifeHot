@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
@@ -9,6 +8,7 @@ namespace Items
     public class RotationElement
     {
         public float SpeedAndDirection;
+        public int HoldDelay;
         public Ease Ease;
         public float Duration;
     }
@@ -29,6 +29,8 @@ namespace Items
     {
         public int AvailableKnives => _availableKnives;
         public float AppleChance => _appleChance;
+        
+        // For special apple and knife count for level
         // public List<float> AppleAngleFromWheel => _appleAngleFromWheel;
         // public List<float> KnifeAngleFromWheel => _knifeAngleFromWheel;
         public RotationElement[] RotationPattern => _rotationPattern;

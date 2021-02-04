@@ -23,16 +23,17 @@ namespace Managers
         [SerializeField] private Knife _knifePrefab;
         [SerializeField] private Level _levelPrefab;
         [SerializeField] private GameObject _blocker;
+        [SerializeField] private GameObject _fireBlocker;
 
-        [Header("Wheel settings")] [SerializeField]
-        private Transform _wheelSpawnPosition;
-
+        [Header("Wheel settings")] 
+        [SerializeField] private Transform _wheelSpawnPosition;
         [Range(0, 1)] [SerializeField] private float _wheelScale;
 
-        [Header("Knife settings")] [SerializeField]
-        private Transform _knifeSpawnPosition;
-
+        [Header("Knife settings")]
+        [SerializeField] private Transform _knifeSpawnPosition;
         [Range(0, 1)] [SerializeField] private float _knifeScale;
+        [SerializeField] private float _knifeFireDelay;
+        
         private LevelData _currentLevelData;
         private bool _isNextLevelInit;
         private Level _currentLevel;
@@ -50,22 +51,19 @@ namespace Managers
         private ScoreManager _scoreManager;
         private MenuPage _menuPage;
         private GamePage _gamePage;
-        private PageManager _pageManager;
 
         public void Init(
             DataManager dataManager,
             SoundManager soundManager,
             ScoreManager scoreManager,
             MenuPage menuPage,
-            GamePage gamePage,
-            PageManager pageManager)
+            GamePage gamePage)
         {
             _dataManager = dataManager;
             _soundManager = soundManager;
             _scoreManager = scoreManager;
             _menuPage = menuPage;
             _gamePage = gamePage;
-            _pageManager = pageManager;
             _knifePrefab.GetComponent<Knife>()
                 .Init(
                     _scoreManager,
@@ -102,6 +100,8 @@ namespace Managers
         {
             if (_currentKnife.gameObject.activeInHierarchy && !_currentKnife.IsReleased)
             {
+                _fireBlocker.SetActive(true);
+                new DelayWrappedCommand(()=> _fireBlocker.SetActive(false), _knifeFireDelay).Started();
                 _currentKnife.Init(
                     _scoreManager,
                     _soundManager,
@@ -303,7 +303,7 @@ namespace Managers
         {
             if (_currentLevel == null)
             {
-                Debug.Log("First level");
+                Debug.Log("First level init");
                 _currentLevel = Instantiate(_levelPrefab, _wheelSpawnPosition);
             }
             else
@@ -351,19 +351,6 @@ namespace Managers
                 _knifeFactory.Init(_currentLevel.transform);
                 _currentLevel.SpawnKnives(_obstacleKnifeFactory);
                 _currentLevel.name = "Level " + _scoreManager.Stage;
-
-                // while (_scoreManager.IsGameOver == false)
-                // {
-                //     
-                //     var rotationIndex = 0;
-
-
-                // if (_)
-                // {
-                //     rotationIndex++;
-                //     rotationIndex = rotationIndex < levelBaseData.RrotationPattern.Length ? rotationIndex : 0;
-                // }
-                // }
             }, delay).Started();
         }
     }

@@ -30,10 +30,9 @@ namespace Items
         private ShopPage _shopPage;
         private Knife _knife;
         private Action<ShopKnife> _onItemSelected;
-        private const string KNIFE_UNLOCKED = "KnifeUnlocked_";
         public bool IsForBoss;
 
-        public bool IsUnlocked
+        private bool _isUnlocked
         {
             get
             {
@@ -41,16 +40,23 @@ namespace Items
                 {
                     return true;
                 }
-
-                return PlayerPrefs.GetInt(KNIFE_UNLOCKED + Index, 0) == 1;
+                
+                return _dataManager.LoadKnifeStatus(Index);
             }
+            set => _dataManager.SaveKnifeStatus(Index, value);
+        }
+
+        public bool IsUnlocked
+        {
+            get => _isUnlocked;
             set
             {
-                PlayerPrefs.SetInt(KNIFE_UNLOCKED + Index, value ? 1 : 0);
+                _isUnlocked = value;
                 UpdateUI();
                 _shopPage.UpdateShopUI();
             }
         }
+
 
         public bool IsSelected
         {
@@ -92,8 +98,7 @@ namespace Items
             {
                 _knife = knives[Index];
             }
-
-
+            
             _knifeImage.sprite = _knife.GetComponent<SpriteRenderer>().sprite;
             UpdateUI();
         }

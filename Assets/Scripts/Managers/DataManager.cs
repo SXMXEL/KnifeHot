@@ -4,12 +4,30 @@ namespace Managers
 {
     public class DataManager
     {
+        private const string KNIFE_UNLOCKED = "KnifeUnlocked_";
         private const string SELECTED_KNIFE = "Knife";
         private const string HIGH_SCORE = "Highscore";
-        private const string HIGH_STAGE = "Highscore";
+        private const string HIGH_STAGE = "Highstage";
         private const string TOTAL_APPLES = "TotalApples";
         private const string SOUND_SETTINGS = "SoundSettings";
         private const string VIBRATION_SETTINGS = "VibrationSettings";
+        
+        public bool LoadKnifeStatus(int index)
+        {
+            if (PlayerPrefs.GetInt(KNIFE_UNLOCKED + index, 0) == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public void SaveKnifeStatus(int index, bool isUnlocked)
+        {
+            PlayerPrefs.SetInt(KNIFE_UNLOCKED + index, isUnlocked? 1 : 0);
+        }
+        
 
         public int SelectedKnifeIndex
         {

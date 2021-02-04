@@ -46,8 +46,7 @@ public class GameController : MonoBehaviour
             _soundManager,
             _scoreManager,
             menuPage,
-            gamePage,
-            _pageManager);
+            gamePage);
     }
 
     private void OnApplicationPause(bool pauseStatus)

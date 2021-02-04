@@ -9,15 +9,17 @@ namespace Items
     {
         public int AvailableKnives => _availableKnives;
         public float AppleChance => _appleChance;
-        
-        [Header("Prefabs")] [SerializeField] private Apple _applePrefab;
+
+        [Header("Prefabs")] 
+        [SerializeField] private Apple _applePrefab;
         [SerializeField] private Knife _knifePrefab;
         [SerializeField] private ParticleSystem _levelParticle, _levelTR, _levelTL;
+        
         private Sequence _rotateSequence;
         private int _availableKnives;
         private float _appleChance;
-        private readonly List<float> _appleAngleFromWheel = new List<float>() {0, 60, 120, 180};
-        private readonly List<float> _knifeAngleFromWheel = new List<float>() {30, 90, 150, 210};
+        private readonly List<float> _appleAngleFromWheel = new List<float> {0, 60, 120, 180};
+        private readonly List<float> _knifeAngleFromWheel = new List<float> {30, 90, 150, 210};
         private int _obstacleKnivesCount;
 
 
@@ -27,7 +29,7 @@ namespace Items
         private List<Apple> _apples = new List<Apple>();
 
         private SpriteRenderer _renderer;
-        
+
         private ParticleSystemRenderer _bottom;
         private ParticleSystemRenderer _topLeft;
         private ParticleSystemRenderer _topRight;
@@ -52,10 +54,13 @@ namespace Items
             _topRight = _levelTR.GetComponent<ParticleSystemRenderer>();
             _availableKnives = _levelData.AvailableKnives;
             _appleChance = _levelData.AppleChance;
+
+            // For custom apples and knives count
             // _appleAngleFromWheel = _levelData.AppleAngleFromWheel;
             // _knifeAngleFromWheel = _levelData.KnifeAngleFromWheel;
+
             _obstacleKnivesCount = Random.Range(0, 3);
-            
+
             if (_scoreManager.Stage % 5 == 0)
             {
                 _renderer.sprite =
@@ -88,18 +93,35 @@ namespace Items
                 _renderer.enabled = true;
             }
 
-            _rotateSequence?.Kill();
-            _rotateSequence = DOTween.Sequence();
-            _rotateSequence.Append(
-                    gameObject.transform.DORotate(
-                        new Vector3(0, 0, 180) * _levelData.RotationPattern[0].SpeedAndDirection,
-                        _levelData.RotationPattern[0].Duration, RotateMode.FastBeyond360))
-                .SetLoops(-1, LoopType.Incremental)
-                .SetEase(_levelData.RotationPattern[0].Ease);
-            _rotateSequence.SetLoops(-1);
-            _rotateSequence.Play();
+            Rotation();
         }
 
+        private void Rotation()
+        {
+            var rotationIndex = 0;
+            RotationLoop();
+            void RotationLoop()
+            {
+                _rotateSequence?.Kill();
+                _rotateSequence = DOTween.Sequence();
+                _rotateSequence.Append(
+                        gameObject.transform.DORotate(
+                            new Vector3(0, 0, 180) * 
+                            _levelData.RotationPattern[rotationIndex].SpeedAndDirection,
+                            _levelData.RotationPattern[rotationIndex].Duration,
+                            RotateMode.FastBeyond360))
+                    .SetEase(_levelData.RotationPattern[rotationIndex].Ease);
+                _rotateSequence.AppendInterval(_levelData.RotationPattern[rotationIndex].HoldDelay);
+                _rotateSequence.Play();
+                _rotateSequence.OnComplete(() =>
+                {
+                    rotationIndex++;
+                    rotationIndex = rotationIndex < _levelData.RotationPattern.Length ? rotationIndex : 0;
+                    Debug.Log(rotationIndex);
+                    RotationLoop();
+                });
+            }
+        }
 
         public void SpawnKnives(ObstacleKnifeFactory obstacleKnifeFactory)
         {
@@ -138,7 +160,7 @@ namespace Items
             _dataManager = dataManager;
             // foreach (var appleAngle in _appleAngleFromWheel)
             // {
-            var appleAngle = _appleAngleFromWheel[Random.Range(0,4)];
+            var appleAngle = _appleAngleFromWheel[Random.Range(0, 4)];
             var appleTmp = _appleFactory.GetApple();
             appleTmp.Init(_dataManager, _soundManager, _appleFactory.ReturnApple);
             var tmpAppleTransform = appleTmp.transform;

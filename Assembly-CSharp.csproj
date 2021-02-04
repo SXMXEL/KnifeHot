@@ -80,6 +80,7 @@
      <Compile Include="Assets\Scripts\ObjectPool.cs" />
      <Compile Include="Assets\Scripts\Pages\Page.cs" />
      <Compile Include="Assets\Scripts\Pages\ShopPage.cs" />
+     <Compile Include="Assets\Scripts\ScrollManager.cs" />
      <Compile Include="Assets\Scripts\UI\GamePage.cs" />
      <Compile Include="Assets\Scripts\UI\MenuPage.cs" />
      <Compile Include="Assets\Scripts\UI\RewardUI.cs" />

@@ -15,6 +15,8 @@ namespace Pages
         public ShopKnife ShopKnifeSelected { get; set; }
         [HideInInspector] public List<ShopKnife> ShopItems => _shopItems;
         [HideInInspector] public int AppleKnivesCount;
+
+        [SerializeField] private ScrollManager _scrollManager;
         [SerializeField] private ShopKnife shopKnifePrefab;
         [SerializeField] private RectTransform _appleKnivesContainer;
         [SerializeField] private RectTransform _bossKnivesContainer;
@@ -62,6 +64,7 @@ namespace Pages
         protected override void OnShow()
         {
             base.OnShow();
+            _scrollManager.Init();
             _knifeIdleSequence?.Kill();
             _knifeIdleSequence = DOTween.Sequence();
 
@@ -133,7 +136,7 @@ namespace Pages
 
         private void UnlockKnife()
         {
-            if (_selected.IsUnlocked == true)
+            if (_selected.IsUnlocked)
             {
                 return;
             }

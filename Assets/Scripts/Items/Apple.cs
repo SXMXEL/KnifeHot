@@ -61,7 +61,6 @@ namespace Items
         public void ReturnObject()
         {
             Debug.Log("apple returned");
-            // gameObject.SetActive(true);
             _boxCollider.enabled = true;
             _spriteRenderer.enabled = true;
             _returnApple.Invoke(this);
