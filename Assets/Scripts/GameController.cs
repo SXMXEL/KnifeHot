@@ -17,6 +17,7 @@ public class GameController : MonoBehaviour
     private NotificationsManager _notificationsManager;
     private DataManager _dataManager;
     private ScoreManager _scoreManager;
+    private VibrationManager _vibrationManager;
 
     private void Awake()
     {
@@ -28,13 +29,13 @@ public class GameController : MonoBehaviour
         _notificationsManager = new NotificationsManager();
         _dataManager = new DataManager();
         _scoreManager = new ScoreManager(_dataManager);
+        _vibrationManager = new VibrationManager(_dataManager);
         _pageManager.PageState = PageState.MenuPage;
         _soundManager.Init(_dataManager);
         menuPage.Init(
             _levelManager,
             _dataManager,
             _soundManager,
-            _scoreManager,
             _pageManager);
         gamePage.Init(
             _soundManager,
@@ -44,6 +45,7 @@ public class GameController : MonoBehaviour
         _levelManager.Init(
             _dataManager,
             _soundManager,
+            _vibrationManager,
             _scoreManager,
             menuPage,
             gamePage);

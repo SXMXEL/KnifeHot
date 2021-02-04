@@ -18,20 +18,23 @@ namespace Items
         public bool IsReleased { get; set; }
         public bool Hit { get; set; }
 
-        private SoundManager _soundManager;
         private ScoreManager _scoreManager;
+        private SoundManager _soundManager;
+        private VibrationManager _vibrationManager;
         private GamePage _gamePage;
-        private bool _isObstacle;
         private Action<Knife> _returnObstacle;
+        private bool _isObstacle;
 
         public void Init(
             ScoreManager scoreManager,
             SoundManager soundManager,
+            VibrationManager vibrationManager,
             GamePage gamePage,
             Action<Knife> returnKnife)
         {
             _scoreManager = scoreManager;
             _soundManager = soundManager;
+            _vibrationManager = vibrationManager;
             _gamePage = gamePage;
             _returnKnife = returnKnife;
             
@@ -85,6 +88,7 @@ namespace Items
                 Collider.offset = new Vector2(Collider.offset.x, -0.4f);
                 Collider.size = new Vector2(Collider.size.x, 1.2f);
                 _soundManager.PlayWheelHit();
+                _vibrationManager.CustomVibrate(VibrationSettings.Low);
                 _gamePage.UpdateScore();
                 other.gameObject.GetComponent<Level>().KnifeHit(this);
             }
@@ -95,9 +99,10 @@ namespace Items
             )
             {
                 Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, -2);
+                // _soundManager.PlayKnifeHit();
                 _soundManager.PlayKnifeHit();
-                _soundManager.PlayGameOver();
-                _soundManager.Vibrate();
+                new DelayWrappedCommand(() => _soundManager.PlayGameOver(), 0.3f).Started();
+                _vibrationManager.CustomVibrate(VibrationSettings.Heavy);
                 new DelayWrappedCommand(ReturnObject, 1f).Started();
                 _scoreManager.IsGameOver = true;
                 new DelayWrappedCommand(_gamePage.GameOver, 1.5f).Started();

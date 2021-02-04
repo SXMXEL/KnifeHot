@@ -1,5 +1,4 @@
-﻿using System;
-using DG.Tweening;
+﻿using DG.Tweening;
 using Managers;
 using Pages;
 using TMPro;
@@ -12,27 +11,25 @@ namespace UI
     {
         public ShopPage ShopPage => shopPage;
 
-        [Header("Items managers")] 
-        [SerializeField] private ShopPage shopPage;
+        [Header("Items managers")] [SerializeField]
+        private ShopPage shopPage;
+
         [SerializeField] private RewardUI _rewardUI;
         [SerializeField] private RewardTimeManager rewardTimeTimeManager;
 
-        [Header("UI")] 
-        [SerializeField] private Image _selectedKnife;
+        [Header("UI")] [SerializeField] private Image _selectedKnife;
         [SerializeField] private GameObject _soundOn;
         [SerializeField] private GameObject _soundOff;
         [SerializeField] private GameObject _vibrateOn;
         [SerializeField] private GameObject _vibrateOff;
         [SerializeField] private TextMeshProUGUI _totalApplesText;
 
-        [Header("Text")] 
-        [SerializeField] private TextMeshProUGUI _highStage;
+        [Header("Text")] [SerializeField] private TextMeshProUGUI _highStage;
         [SerializeField] private TextMeshProUGUI _highScore;
         [SerializeField] private TextMeshProUGUI _knifeText;
         [SerializeField] private TextMeshProUGUI _hotText;
 
-        [Header("Buttons")] 
-        [SerializeField] private Button _rateButton;
+        [Header("Buttons")] [SerializeField] private Button _rateButton;
         [SerializeField] private Button _playButton;
         [SerializeField] private Button _ShopBackToMenuButton;
         [SerializeField] private Button _SettingsBackToMenuButton;
@@ -42,9 +39,8 @@ namespace UI
         [SerializeField] private Button _shopButton;
 
         [SerializeField] private Transform _bottomButtons;
-
+        [SerializeField] private GameObject _lunarConsole;
         private SoundManager _soundManager;
-        private ScoreManager _scoreManager;
         private DataManager _dataManager;
         private PageManager _pageManager;
         private LevelManager _levelManager;
@@ -52,19 +48,16 @@ namespace UI
         private Sequence _hotTextSequence;
 
         public float ScreenHeight => Camera.main.orthographicSize * 2;
-        public float ScreenWidth => ScreenHeight / Screen.height * Screen.width;
 
         public void Init(
             LevelManager levelManager,
             DataManager dataManager,
             SoundManager soundManager,
-            ScoreManager scoreManager,
             PageManager pageManager)
         {
             _levelManager = levelManager;
             _dataManager = dataManager;
             _soundManager = soundManager;
-            _scoreManager = scoreManager;
             _pageManager = pageManager;
             _rewardUI.Init(
                 _soundManager,
@@ -75,10 +68,7 @@ namespace UI
                 _soundManager,
                 _dataManager);
             _rateButton.onClick.RemoveAllListeners();
-            _rateButton.onClick.AddListener(() =>
-            {
-                Application.OpenURL("https://github.com/SXMXEL/KnifeHot");
-            });
+            _rateButton.onClick.AddListener(() => { Application.OpenURL("https://github.com/SXMXEL/KnifeHot"); });
             _settingsButton.onClick.RemoveAllListeners();
             _settingsButton.onClick.AddListener(() =>
             {
@@ -124,6 +114,9 @@ namespace UI
                 _soundManager.PlayButton();
                 _pageManager.PageState = PageState.ShopPage;
             });
+            var devModeButton = _knifeText.GetComponent<Button>();
+            devModeButton.onClick.RemoveAllListeners();
+            devModeButton.onClick.AddListener(() => { _lunarConsole.SetActive(!_lunarConsole.activeSelf); });
             UpdateSoundsUI();
             UpdateVibrationUI();
             StartAnimation();
@@ -148,37 +141,37 @@ namespace UI
             _startAnimation?.Kill();
             _startAnimation = DOTween.Sequence();
             _startAnimation.Append(_selectedKnife.transform
-                    .DOMove(new Vector3(0,-7.5f,0), 0.1f));
-            _startAnimation.AppendCallback(()=> _selectedKnife.gameObject.SetActive(true));
+                .DOMove(new Vector3(0, -7.5f, 0), 0.1f));
+            _startAnimation.AppendCallback(() => _selectedKnife.gameObject.SetActive(true));
             _startAnimation.Append(_selectedKnife.transform
-                    .DOMove(selectedKnifePosition,delay).SetEase(Ease.OutBack));
+                .DOMove(selectedKnifePosition, delay).SetEase(Ease.OutBack));
             _startAnimation.Append(_knifeText.transform
-                    .DOMove(new Vector3(-10f, knifeTextPosition.y, knifeTextPosition.z), 0.1f ));
+                .DOMove(new Vector3(-10f, knifeTextPosition.y, knifeTextPosition.z), 0.1f));
             _startAnimation.Join(_hotText.transform
-                    .DOMove(new Vector3(10f, hotTextPosition.y, hotTextPosition.z), 0.1f));
+                .DOMove(new Vector3(10f, hotTextPosition.y, hotTextPosition.z), 0.1f));
             _startAnimation.AppendCallback(() =>
             {
                 _knifeText.gameObject.SetActive(true);
                 _hotText.gameObject.SetActive(true);
             });
             _startAnimation.Append(_knifeText.transform
-                    .DOMove(new Vector3(0, knifeTextPosition.y, knifeTextPosition.z), delay)
-                    .SetEase(Ease.OutBack));
+                .DOMove(new Vector3(0, knifeTextPosition.y, knifeTextPosition.z), delay)
+                .SetEase(Ease.OutBack));
             _startAnimation.Join(_hotText.transform
-                    .DOMove(new Vector3(0, hotTextPosition.y, hotTextPosition.z), delay)
-                    .SetEase(Ease.OutBack));
+                .DOMove(new Vector3(0, hotTextPosition.y, hotTextPosition.z), delay)
+                .SetEase(Ease.OutBack));
             _startAnimation.Append(_playButton.transform.DOScale(Vector3.zero, 0.1f));
-            _startAnimation.AppendCallback(()=> _playButton.gameObject.SetActive(true));
+            _startAnimation.AppendCallback(() => _playButton.gameObject.SetActive(true));
             _startAnimation.Append(_playButton.transform
-                    .DOScale(Vector3.one, 0.9f)
-                    .SetEase(Ease.OutBack));
+                .DOScale(Vector3.one, 0.9f)
+                .SetEase(Ease.OutBack));
             _startAnimation.Append(_bottomButtons.transform
-                    .DOMove(new Vector3(0,-12.5f,0), 0.1f)
-                    .SetEase(Ease.OutBack));
+                .DOMove(new Vector3(0, -12.5f, 0), 0.1f)
+                .SetEase(Ease.OutBack));
             _startAnimation.AppendCallback(() => _bottomButtons.gameObject.SetActive(true));
             _startAnimation.Append(_bottomButtons.transform
-                    .DOMove(bottomButtonsPosition, delay)
-                    .SetEase(Ease.OutBack));
+                .DOMove(bottomButtonsPosition, delay)
+                .SetEase(Ease.OutBack));
             _startAnimation.AppendCallback(() =>
             {
                 _settingsButton.gameObject.SetActive(true);

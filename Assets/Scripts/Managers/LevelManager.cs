@@ -27,7 +27,6 @@ namespace Managers
 
         [Header("Wheel settings")] 
         [SerializeField] private Transform _wheelSpawnPosition;
-        [Range(0, 1)] [SerializeField] private float _wheelScale;
 
         [Header("Knife settings")]
         [SerializeField] private Transform _knifeSpawnPosition;
@@ -43,11 +42,12 @@ namespace Managers
         private Sequence _bossDefeatedSequence;
         private Sequence _knifeScaleSequence;
 
-        private float _screenWidth => _menuPage.ScreenWidth;
         private float _screenHeight => _menuPage.ScreenHeight;
         private Knife _selectedKnifePrefab => _menuPage.ShopPage.SelectedKnifePrefab;
+        
         private DataManager _dataManager;
         private SoundManager _soundManager;
+        private VibrationManager _vibrationManager;
         private ScoreManager _scoreManager;
         private MenuPage _menuPage;
         private GamePage _gamePage;
@@ -55,12 +55,14 @@ namespace Managers
         public void Init(
             DataManager dataManager,
             SoundManager soundManager,
+            VibrationManager vibrationManager,
             ScoreManager scoreManager,
             MenuPage menuPage,
             GamePage gamePage)
         {
             _dataManager = dataManager;
             _soundManager = soundManager;
+            _vibrationManager = vibrationManager;
             _scoreManager = scoreManager;
             _menuPage = menuPage;
             _gamePage = gamePage;
@@ -68,6 +70,7 @@ namespace Managers
                 .Init(
                     _scoreManager,
                     _soundManager,
+                    _vibrationManager,
                     _gamePage,
                     _knifeFactory.ReturnKnife);
         }
@@ -105,6 +108,7 @@ namespace Managers
                 _currentKnife.Init(
                     _scoreManager,
                     _soundManager,
+                    _vibrationManager,
                     _gamePage,
                     _knifeFactory.ReturnKnife);
 
@@ -236,7 +240,7 @@ namespace Managers
                 return;
             }
 
-            _soundManager.VibrateVictory();
+            _vibrationManager.CustomVibrate(VibrationSettings.Medium);
             Debug.Log("Next level");
 
             if (_scoreManager.Stage % 5 == 0)

@@ -219,6 +219,7 @@ namespace Items
 
         public void Dispose()
         {
+            
             if (_scoreManager.Stage % 5 != 0)
             {
                 _levelParticle.Play();

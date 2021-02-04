@@ -17,7 +17,6 @@ namespace Managers
         
         private DataManager _dataManager;
 
-
         public void Init(DataManager dataManager)
         {
             _dataManager = dataManager;
@@ -83,22 +82,6 @@ namespace Managers
         {
             PlaySound(_appleRewardClip);
         }
-
-        public void Vibrate()
-        {
-            if (_dataManager.VibrationSettings)
-            {
-                Handheld.Vibrate();
-                // Vibration.VibratePop();
-            }
-        }
-        public void VibrateVictory()
-        {
-            if (_dataManager.VibrationSettings)
-            {
-                Handheld.Vibrate();
-                // Vibration.VibratePeek();
-            }
-        }
+        
     }
 }

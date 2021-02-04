@@ -1,6 +1,7 @@
 ﻿using System;
 using Managers;
 using Pages;
+using UI;
 using UnityEngine;
 using UnityEngine.UI;
 

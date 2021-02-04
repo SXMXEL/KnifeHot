@@ -2,7 +2,6 @@
 using System.Linq;
 using DG.Tweening;
 using Managers;
-using Pages;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +15,7 @@ namespace UI
         [SerializeField] private TextMeshProUGUI _stageText;
         [SerializeField] private Color _stageCompletedColor;
         [SerializeField] private Color _stageNormalColor;
-        [SerializeField] private Color _bossfightColor;
+        [SerializeField] private Color _bossFightColor;
         [SerializeField] private List<Image> _stageIcons;
 
         [Header("Boss")] 
@@ -129,7 +128,6 @@ namespace UI
             var delay = 0.5f;
             var scorePanelPosition = _scorePanel.transform.position;
             var buttonsBarPosition = _buttonsBar.transform.position;
-            var homeTextPosition = _homeText.transform.position;
             _levelManager.IsInitialized = false;
             _homeButton.gameObject.SetActive(false);
             _homeText.SetActive(false);
@@ -204,7 +202,7 @@ namespace UI
                 _stageText.color = Color.red;
                 var bossFightIcon = _stageIcons.Last();
                 bossFightIcon.gameObject.SetActive(true);
-                bossFightIcon.color = _bossfightColor;
+                bossFightIcon.color = _bossFightColor;
             }
             else
             {

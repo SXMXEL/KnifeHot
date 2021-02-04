@@ -1,7 +1,6 @@
 ﻿using System;
 using Assets.SimpleAndroidNotifications;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Managers
 {
@@ -26,7 +25,7 @@ namespace Managers
                 Light = false,
                 SmallIcon = NotificationIcon.Clock,
                 SmallIconColor = Color.white,
-                LargeIcon = "app_icon",
+                LargeIcon = "app_icon"
             };
             
             if (!Application.isEditor)
