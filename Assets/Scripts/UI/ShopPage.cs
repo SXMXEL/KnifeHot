@@ -34,8 +34,9 @@ namespace UI
 
 
         private List<ShopKnife> _shopItems;
-
+        private List<Knife> _allKnives = new List<Knife>();
         
+
         private Image _selectedKnife;
         private SoundManager _soundManager;
         private Sequence _knifeIdleSequence;
@@ -59,6 +60,8 @@ namespace UI
                 _soundManager.PlayUnlock();
                 UnlockKnife();
             });
+
+            
         }
 
         protected override void OnShow()
@@ -115,13 +118,23 @@ namespace UI
 
             AppleKnivesCount = _appleKnives.Length;
 
-            for (int i = _appleKnives.Length; i < _bossKnives.Length + _appleKnives.Length; i++)
+            for (int i = _appleKnives.Length + 1; i <= _bossKnives.Length + _appleKnives.Length; i++)
             {
                 var item = Instantiate(shopKnifePrefab, _bossKnivesContainer);
                 item.Init(_dataManager, OnItemSelected);
                 item.IsForBoss = true;
                 item.Setup(_bossKnives, i, this);
                 _shopItems.Add(item);
+            }
+            
+            foreach (var knife in _appleKnives)
+            {
+                _allKnives.Add(knife);
+            }
+
+            foreach (var knife in _bossKnives)
+            {
+                _allKnives.Add(knife);
             }
 
             _shopItems[_dataManager.SelectedKnifeIndex].OnItemClick();
@@ -130,7 +143,15 @@ namespace UI
         private void OnItemSelected(ShopKnife selectedKnife)
         {
             _selected = selectedKnife;
-            _price.text = _selected.Price.ToString();
+            if (!_selected.IsForBoss)
+            {
+                _price.text = _selected.Price.ToString();
+            }
+            else
+            {
+                _price.text = "For boss";
+            }
+
             UpdateShopUI();
         }
 
@@ -140,8 +161,10 @@ namespace UI
             {
                 return;
             }
-            
-            if (_dataManager.TotalApples > _selected.Price && _selected.IsForBoss == false)
+
+            if (_dataManager.TotalApples > _selected.Price 
+                && _selected.IsForBoss == false 
+                && _selected.IsUnlocked == false)
             {
                 _dataManager.TotalApples -= _selected.Price;
                 _selected.IsUnlocked = true;
@@ -162,12 +185,10 @@ namespace UI
             _knifeLocked.gameObject.SetActive(!_selected.IsUnlocked);
 
             var itemsUnlocked = _shopItems.FindAll(x => x.IsUnlocked).Count;
-
-            _counter.text = itemsUnlocked + "/" + _appleKnives.Length + _bossKnives.Length;
-
-            SelectedKnifePrefab = _selected.IsForBoss ?
-                _bossKnives[_dataManager.SelectedKnifeIndex - _appleKnives.Length] 
-                : _appleKnives[_dataManager.SelectedKnifeIndex];
+            var totalKnivesCount = _appleKnives.Length + _bossKnives.Length;
+            _counter.text = itemsUnlocked + "/" + totalKnivesCount;
+            
+            SelectedKnifePrefab = _allKnives[_dataManager.SelectedKnifeIndex];
 
             _selectedKnife.sprite =
                 SelectedKnifePrefab.GetComponent<SpriteRenderer>().sprite;

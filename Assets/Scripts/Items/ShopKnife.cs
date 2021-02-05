@@ -93,7 +93,7 @@ namespace Items
             Index = index;
             if (IsForBoss)
             {
-                _knife = knives[Index - _shopPage.AppleKnivesCount];
+                _knife = knives[Index - _shopPage.AppleKnivesCount - 1];
             }
             else
             {

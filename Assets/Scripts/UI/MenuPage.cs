@@ -11,25 +11,28 @@ namespace UI
     {
         public ShopPage ShopPage => shopPage;
 
-        [Header("Items managers")] [SerializeField]
-        private ShopPage shopPage;
-
+        [Header("Items managers")] 
+        [SerializeField] private ShopPage shopPage;
         [SerializeField] private RewardUI _rewardUI;
         [SerializeField] private RewardTimeManager rewardTimeTimeManager;
 
-        [Header("UI")] [SerializeField] private Image _selectedKnife;
+        [Header("UI")] 
+        [SerializeField] private Image _selectedKnife;
+        [SerializeField] private Image _appleImage;
         [SerializeField] private GameObject _soundOn;
         [SerializeField] private GameObject _soundOff;
         [SerializeField] private GameObject _vibrateOn;
         [SerializeField] private GameObject _vibrateOff;
         [SerializeField] private TextMeshProUGUI _totalApplesText;
 
-        [Header("Text")] [SerializeField] private TextMeshProUGUI _highStage;
+        [Header("Text")] 
+        [SerializeField] private TextMeshProUGUI _highStage;
         [SerializeField] private TextMeshProUGUI _highScore;
         [SerializeField] private TextMeshProUGUI _knifeText;
         [SerializeField] private TextMeshProUGUI _hotText;
 
-        [Header("Buttons")] [SerializeField] private Button _rateButton;
+        [Header("Buttons")] 
+        [SerializeField] private Button _rateButton;
         [SerializeField] private Button _playButton;
         [SerializeField] private Button _ShopBackToMenuButton;
         [SerializeField] private Button _SettingsBackToMenuButton;
@@ -129,11 +132,14 @@ namespace UI
             var hotTextPosition = _hotText.transform.position;
             var bottomButtonsPosition = _bottomButtons.transform.position;
             var selectedKnifePosition = _selectedKnife.transform.position;
+            var highScorePosition = _highScore.transform.position;
+            var highStagePosition = _highStage.transform.position;
             _settingsButton.gameObject.SetActive(false);
             _totalApplesText.gameObject.SetActive(false);
             _highScore.gameObject.SetActive(false);
             _highStage.gameObject.SetActive(false);
             _selectedKnife.gameObject.SetActive(false);
+            _appleImage.gameObject.SetActive(false);
             _playButton.gameObject.SetActive(false);
             _bottomButtons.gameObject.SetActive(false);
             _knifeText.gameObject.SetActive(false);
@@ -172,14 +178,35 @@ namespace UI
             _startAnimation.Append(_bottomButtons.transform
                 .DOMove(bottomButtonsPosition, delay)
                 .SetEase(Ease.OutBack));
+            
+            _startAnimation.Append(_settingsButton.transform.DOScale(Vector3.zero, 0.1f));
+            _startAnimation.Join(_appleImage.transform.DOScale(Vector3.zero, 0.1f));
+            _startAnimation.Join(_highScore.transform
+                .DOMove(new Vector3(-10f, highScorePosition.y, highScorePosition.z), 0.1f));
+            _startAnimation.Join(_highStage.transform
+                .DOMove(new Vector3(10f, highStagePosition.y, highStagePosition.z), 0.1f));
             _startAnimation.AppendCallback(() =>
             {
+                _appleImage.gameObject.SetActive(true);
                 _settingsButton.gameObject.SetActive(true);
                 _totalApplesText.gameObject.SetActive(true);
                 _highScore.gameObject.SetActive(true);
                 _highStage.gameObject.SetActive(true);
             });
-            // _startAnimation.Append(_knifeText.transform.Sha);
+            _startAnimation.Join(_highScore.transform
+                .DOMove(new Vector3(highScorePosition.x, highScorePosition.y, highScorePosition.z), delay)
+                .SetEase(Ease.OutBack));
+            _startAnimation.Join(_highStage.transform
+                .DOMove(new Vector3(highStagePosition.x, highStagePosition.y, highStagePosition.z), delay)
+                .SetEase(Ease.OutBack));
+            _startAnimation.Join(_settingsButton.transform
+                .DOScale(Vector3.one, 0.9f)
+                .SetEase(Ease.OutBack));
+            _startAnimation.Join(_appleImage.transform
+                .DOScale(Vector3.one, 0.9f)
+                .SetEase(Ease.OutBack));
+            
+            
             _startAnimation.Play();
         }
 

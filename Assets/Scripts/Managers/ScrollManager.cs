@@ -37,7 +37,12 @@ namespace Managers
                                * 2000;
             var isMoveRight = currentMousePosition.x < _touchStartPosition.x;
             var cellSize = _shopPlate.GetComponent<RectTransform>().rect.width;
-
+            
+            if (moveDistance < cellSize * 0.8f)
+            {
+                return;
+            }
+            
             if (isMoveRight)
             {
                 _scrollRect.content

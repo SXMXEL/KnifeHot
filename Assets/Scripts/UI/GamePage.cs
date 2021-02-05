@@ -122,6 +122,7 @@ namespace UI
 
         public void GameOver()
         {
+            _levelManager.RestartUI();
             _gameOverScore.text = _scoreManager.Score.ToString();
             _gameOverStage.text = "Stage " + _scoreManager.Stage;
             Debug.Log("game over");
@@ -169,11 +170,6 @@ namespace UI
 
         private void Restart()
         {
-            if (_levelManager.IsInitialized == false)
-            {
-                _levelManager.RestartUI();
-            }
-
             _pageManager.PageState = PageState.GamePage;
         }
 

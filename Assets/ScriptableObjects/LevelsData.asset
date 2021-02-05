@@ -71,11 +71,11 @@ MonoBehaviour:
       _availableKnives: 6
       _appleChance: 0.25
       _rotationPattern:
-      - SpeedAndDirection: 3
+      - SpeedAndDirection: 1.5
         HoldDelay: 0
         Ease: 16
         Duration: 3
-      - SpeedAndDirection: -3
+      - SpeedAndDirection: -1.5
         HoldDelay: 0
         Ease: 16
         Duration: 3

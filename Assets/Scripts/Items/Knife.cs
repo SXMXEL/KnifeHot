@@ -84,7 +84,6 @@ namespace Items
             {
                 _particle.Play();
                 _scoreManager.Score++;
-                Rigidbody.bodyType = RigidbodyType2D.Kinematic;
                 Collider.offset = new Vector2(Collider.offset.x, -0.4f);
                 Collider.size = new Vector2(Collider.size.x, 1.2f);
                 _soundManager.PlayWheelHit();
@@ -98,15 +97,20 @@ namespace Items
                 && !_scoreManager.IsGameOver
             )
             {
+                transform.SetParent(null);
                 Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, -2);
-                // _soundManager.PlayKnifeHit();
                 _soundManager.PlayKnifeHit();
                 new DelayWrappedCommand(() => _soundManager.PlayGameOver(), 0.3f).Started();
                 _vibrationManager.CustomVibrate(VibrationSettings.Heavy);
-                new DelayWrappedCommand(ReturnObject, 1f).Started();
+                new DelayWrappedCommand(() =>
+                {
+                    ReturnObject();
+                    Rigidbody.isKinematic = true;
+                    Rigidbody.velocity = Vector2.zero;
+                    Hit = true;
+                }, 1f).Started();
                 _scoreManager.IsGameOver = true;
                 new DelayWrappedCommand(_gamePage.GameOver, 1.5f).Started();
-                
             }
         }
 

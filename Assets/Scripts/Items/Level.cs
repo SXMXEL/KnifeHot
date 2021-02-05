@@ -34,6 +34,7 @@ namespace Items
         private ParticleSystemRenderer _topLeft;
         private ParticleSystemRenderer _topRight;
         private Sequence _bounceSequence;
+
         private ScoreManager _scoreManager;
         private LevelBaseData _levelData;
         private SoundManager _soundManager;
@@ -117,7 +118,6 @@ namespace Items
                 {
                     rotationIndex++;
                     rotationIndex = rotationIndex < _levelData.RotationPattern.Length ? rotationIndex : 0;
-                    Debug.Log(rotationIndex);
                     RotationLoop();
                 });
             }
@@ -219,7 +219,7 @@ namespace Items
 
         public void Dispose()
         {
-            
+            var pause = 1f;
             if (_scoreManager.Stage % 5 != 0)
             {
                 _levelParticle.Play();
@@ -232,14 +232,37 @@ namespace Items
 
             foreach (var knife in Knives)
             {
-                knife.ReturnObject();
+                knife.transform.SetParent(null);
+                var bodyType = knife.Rigidbody.bodyType;
+                var hitStatus = knife.Hit;
+                knife.Rigidbody.bodyType = RigidbodyType2D.Dynamic;
+                knife.Hit = false;
+                new DelayWrappedCommand(() =>
+                {
+                    knife.Hit = hitStatus;
+                    if (knife.Rigidbody.bodyType != RigidbodyType2D.Kinematic)
+                    {
+                        knife.Rigidbody.bodyType = RigidbodyType2D.Kinematic;
+                    }
+                }, pause).Started();
+                new DelayWrappedCommand(() => knife.ReturnObject(), 1.1f).Started();
             }
 
             Knives.Clear();
 
             foreach (var knife in _obstacleKnives)
             {
-                knife.ReturnObstacle();
+                knife.transform.SetParent(null);
+                var bodyType = knife.Rigidbody.bodyType;
+                var gravity = knife.Rigidbody.gravityScale;
+                knife.Rigidbody.bodyType = RigidbodyType2D.Dynamic;
+                knife.Rigidbody.gravityScale = 1;
+                new DelayWrappedCommand(() =>
+                {
+                    knife.Rigidbody.bodyType = bodyType;
+                    knife.Rigidbody.gravityScale = gravity;
+                },pause).Started();
+                new DelayWrappedCommand(() => knife.ReturnObstacle(), 1.1f).Started();
             }
 
             _obstacleKnives.Clear();
@@ -250,6 +273,7 @@ namespace Items
             }
 
             _apples.Clear();
+            
         }
     }
 }
