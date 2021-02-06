@@ -55,11 +55,7 @@ namespace UI
             _soundManager = soundManager;
             Setup();
             _unlockKnifeButton.onClick.RemoveAllListeners();
-            _unlockKnifeButton.onClick.AddListener(() =>
-            {
-                _soundManager.PlayUnlock();
-                UnlockKnife();
-            });
+            _unlockKnifeButton.onClick.AddListener(UnlockKnife);
 
             
         }
@@ -187,8 +183,11 @@ namespace UI
             var itemsUnlocked = _shopItems.FindAll(x => x.IsUnlocked).Count;
             var totalKnivesCount = _appleKnives.Length + _bossKnives.Length;
             _counter.text = itemsUnlocked + "/" + totalKnivesCount;
+
             
-            SelectedKnifePrefab = _allKnives[_dataManager.SelectedKnifeIndex];
+            SelectedKnifePrefab = _selected.IsForBoss ? 
+                _allKnives[_dataManager.SelectedKnifeIndex - 1] 
+                : _allKnives[_dataManager.SelectedKnifeIndex];
 
             _selectedKnife.sprite =
                 SelectedKnifePrefab.GetComponent<SpriteRenderer>().sprite;
