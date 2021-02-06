@@ -100,7 +100,7 @@ namespace Items
             // }
             // else
             
-                _knife = _knives[Index];
+            _knife = _knives[Index];
             
             
             _knifeImage.sprite = _knife.GetComponent<SpriteRenderer>().sprite;

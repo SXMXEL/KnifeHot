@@ -214,7 +214,7 @@ namespace Managers
                 knife.Hit = false;
             }
 
-            var delay = 0.15f;
+            var delay = 0.12f;
             var knifeTransform = knife.transform;
             var knifeSprite = knife.GetComponent<SpriteRenderer>();
             knife.gameObject.SetActive(false);

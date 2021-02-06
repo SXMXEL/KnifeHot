@@ -34,7 +34,7 @@ namespace UI
 
 
         private List<ShopKnife> _shopItems;
-        [SerializeField] private List<Knife> _allKnives;
+        private List<Knife> _allKnives;
         
 
         private Image _selectedKnife;
@@ -56,7 +56,7 @@ namespace UI
             Setup();
             _unlockKnifeButton.onClick.RemoveAllListeners();
             _unlockKnifeButton.onClick.AddListener(UnlockKnife);
-
+            
             
         }
 
@@ -103,6 +103,17 @@ namespace UI
 
         private void Setup()
         {
+            _allKnives = new List<Knife>();
+            foreach (var knife in _appleKnives)
+            {
+                _allKnives.Add(knife);
+            }
+
+            foreach (var knife in _bossKnives)
+            {
+                _allKnives.Add(knife);
+            }
+            
             AppleKnivesCount = _appleKnives.Length;
             _shopItems = new List<ShopKnife>();
             for (int i = 0; i < _appleKnives.Length; i++)
