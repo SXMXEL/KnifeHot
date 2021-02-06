@@ -43,6 +43,8 @@ namespace UI
 
         [SerializeField] private Transform _bottomButtons;
         [SerializeField] private GameObject _lunarConsole;
+        [SerializeField] private GameObject _startAnimationBlocker;
+        
         private SoundManager _soundManager;
         private DataManager _dataManager;
         private PageManager _pageManager;
@@ -134,6 +136,7 @@ namespace UI
             var selectedKnifePosition = _selectedKnife.transform.position;
             var highScorePosition = _highScore.transform.position;
             var highStagePosition = _highStage.transform.position;
+            _startAnimationBlocker.SetActive(true);
             _settingsButton.gameObject.SetActive(false);
             _totalApplesText.gameObject.SetActive(false);
             _highScore.gameObject.SetActive(false);
@@ -205,8 +208,7 @@ namespace UI
             _startAnimation.Join(_appleImage.transform
                 .DOScale(Vector3.one, 0.9f)
                 .SetEase(Ease.OutBack));
-            
-            
+            _startAnimation.OnComplete(()=> _startAnimationBlocker.SetActive(false));
             _startAnimation.Play();
         }
 

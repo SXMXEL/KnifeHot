@@ -237,6 +237,7 @@ namespace Items
                 var hitStatus = knife.Hit;
                 knife.Rigidbody.bodyType = RigidbodyType2D.Dynamic;
                 knife.Hit = false;
+                knife.Rigidbody.AddForce(new Vector2(0.01f, 6), ForceMode2D.Impulse);
                 new DelayWrappedCommand(() =>
                 {
                     knife.Hit = hitStatus;
@@ -245,7 +246,7 @@ namespace Items
                         knife.Rigidbody.bodyType = RigidbodyType2D.Kinematic;
                     }
                 }, pause).Started();
-                new DelayWrappedCommand(() => knife.ReturnObject(), 1.1f).Started();
+                new DelayWrappedCommand(() => knife.ReturnObject(), 0.7f).Started();
             }
 
             Knives.Clear();
@@ -257,12 +258,13 @@ namespace Items
                 var gravity = knife.Rigidbody.gravityScale;
                 knife.Rigidbody.bodyType = RigidbodyType2D.Dynamic;
                 knife.Rigidbody.gravityScale = 1;
+                knife.Rigidbody.AddForce(new Vector2(0.01f, 6), ForceMode2D.Impulse);
                 new DelayWrappedCommand(() =>
                 {
                     knife.Rigidbody.bodyType = bodyType;
                     knife.Rigidbody.gravityScale = gravity;
                 },pause).Started();
-                new DelayWrappedCommand(() => knife.ReturnObstacle(), 1.1f).Started();
+                new DelayWrappedCommand(() => knife.ReturnObstacle(), 0.7f).Started();
             }
 
             _obstacleKnives.Clear();

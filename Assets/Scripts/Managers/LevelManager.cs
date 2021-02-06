@@ -15,7 +15,6 @@ namespace Managers
 
         [HideInInspector] public string BossName;
         private int _totalSpawnKnives { get; set; }
-
         [SerializeField] private KnifeCounter _knifeCounter;
         [SerializeField] private LevelDataHolder _levelsDataHolder;
         [SerializeField] private ObstacleKnifeFactory _obstacleKnifeFactory;
@@ -107,7 +106,7 @@ namespace Managers
             {
                 _fireBlocker.SetActive(true);
                 new DelayWrappedCommand(() => _fireBlocker.SetActive(false), _knifeFireDelay).Started();
-                
+
                 _currentKnife.Init(
                     _scoreManager,
                     _soundManager,
@@ -152,14 +151,6 @@ namespace Managers
 
             _gamePage.UpdateUI();
             GenerateLevel(levelBaseData);
-
-            var delay = 3.25f;
-            if (_scoreManager.Stage == 1)
-            {
-                delay = 0.15f;
-            }
-
-            new DelayWrappedCommand(() => _knifeCounter.SetupKnife(_currentLevel.AvailableKnives), delay).Started();
         }
 
 
@@ -177,7 +168,7 @@ namespace Managers
                 && _currentLevel.AvailableKnives > _totalSpawnKnives
                 && !_scoreManager.IsGameOver);
 
-            
+
             _knifeFactory.Init(_knifeSpawnPosition);
             Knife knife;
 
@@ -232,7 +223,7 @@ namespace Managers
             _knifeScaleSequence.Append(knifeTransform.DOScale(Vector3.one, delay).SetEase(Ease.OutBack));
             _knifeScaleSequence.Join(knifeSprite.DOFade(255, delay));
             _knifeScaleSequence.Play();
-            _knifeScaleSequence.OnComplete(()=> _totalSpawnKnives++);
+            _knifeScaleSequence.OnComplete(() => _totalSpawnKnives++);
             float knifeScaleInTheScreen = _screenHeight * _knifeScale /
                                           knife.GetComponent<SpriteRenderer>().bounds.size.x;
             knife.transform.localScale = Vector3.one * knifeScaleInTheScreen;
@@ -328,9 +319,14 @@ namespace Managers
                 }
 
                 _scoreManager.IsGameOver = true;
-                new DelayWrappedCommand(() => _scoreManager.IsGameOver = false, 1.3f).Started();
+                new DelayWrappedCommand(() => _scoreManager.IsGameOver = false, 1.5f).Started();
                 _currentLevel.Dispose();
-                _knifeCounter.gameObject.SetActive(false);
+
+                if (_knifeCounter.gameObject.activeSelf)
+                {
+                    _knifeCounter.gameObject.SetActive(false);
+                }
+
                 Debug.Log("Current level: " + _scoreManager.Stage);
             }
 
@@ -342,7 +338,7 @@ namespace Managers
 
             new DelayWrappedCommand(() =>
             {
-                _currentLevel.Init( _scoreManager, levelBaseData);
+                _currentLevel.Init(_scoreManager, levelBaseData);
                 _currentLevel.gameObject.SetActive(false);
                 _levelScaleSequence?.Kill();
                 _levelScaleSequence = DOTween.Sequence();
@@ -363,6 +359,7 @@ namespace Managers
                         .Started();
                 }
 
+                new DelayWrappedCommand(() => _knifeCounter.SetupKnife(_currentLevel.AvailableKnives), 0.5f).Started();
                 _knifeFactory.Init(_currentLevel.transform);
                 _currentLevel.SpawnKnives(_obstacleKnifeFactory);
                 _currentLevel.name = "Level " + _scoreManager.Stage;
