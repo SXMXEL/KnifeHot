@@ -46,6 +46,7 @@ namespace Managers
         private float _screenHeight => _menuPage.ScreenHeight;
         private Knife _selectedKnifePrefab => _menuPage.ShopPage.SelectedKnifePrefab;
 
+        private bool _isRestart;
         private DataManager _dataManager;
         private SoundManager _soundManager;
         private VibrationManager _vibrationManager;
@@ -67,6 +68,12 @@ namespace Managers
             _scoreManager = scoreManager;
             _menuPage = menuPage;
             _gamePage = gamePage;
+
+            if (_isRestart)
+            {
+                _isRestart = false;
+            }
+            
             _knifePrefab.GetComponent<Knife>()
                 .Init(
                     _scoreManager,
@@ -157,6 +164,7 @@ namespace Managers
         public void RestartUI()
         {
             StopCoroutine(GenerateKnife());
+            _isRestart = true;
             InitializeGame();
         }
 
@@ -320,7 +328,7 @@ namespace Managers
 
                 _scoreManager.IsGameOver = true;
                 new DelayWrappedCommand(() => _scoreManager.IsGameOver = false, 1.5f).Started();
-                _currentLevel.Dispose();
+                _currentLevel.Dispose(_isRestart);
 
                 if (_knifeCounter.gameObject.activeSelf)
                 {

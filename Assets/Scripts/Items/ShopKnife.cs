@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Managers;
 using Pages;
 using UI;
@@ -32,6 +33,7 @@ namespace Items
         private Knife _knife;
         private Action<ShopKnife> _onItemSelected;
         public bool IsForBoss;
+        private List<Knife> _knives;
 
         private bool _isUnlocked
         {
@@ -87,18 +89,19 @@ namespace Items
             _innerButton.onClick.AddListener(OnItemClick);
         }
 
-        public void Setup(Knife[] knives, int index, ShopPage shopPage)
+        public void Setup(List<Knife> knives, int index, ShopPage shopPage)
         {
             _shopPage = shopPage;
+            _knives = knives;
             Index = index;
-            if (IsForBoss)
-            {
-                _knife = knives[Index - _shopPage.AppleKnivesCount - 1];
-            }
-            else
-            {
-                _knife = knives[Index];
-            }
+            // if (IsForBoss)
+            // {
+            //     _knife = _knives[Index - _shopPage.AppleKnivesCount];
+            // }
+            // else
+            
+                _knife = _knives[Index];
+            
             
             _knifeImage.sprite = _knife.GetComponent<SpriteRenderer>().sprite;
             UpdateUI();

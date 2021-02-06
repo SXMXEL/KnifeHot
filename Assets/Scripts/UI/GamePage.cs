@@ -124,7 +124,6 @@ namespace UI
         {
             _gameOverScore.text = _scoreManager.Score.ToString();
             _gameOverStage.text = "Stage " + _scoreManager.Stage;
-            _levelManager.RestartUI();
             Debug.Log("game over");
             var delay = 0.5f;
             var scorePanelPosition = _scorePanel.transform.position;
@@ -170,6 +169,7 @@ namespace UI
 
         private void Restart()
         {
+            _levelManager.RestartUI();
             _pageManager.PageState = PageState.GamePage;
         }
 

@@ -34,7 +34,7 @@ namespace UI
 
 
         private List<ShopKnife> _shopItems;
-        private List<Knife> _allKnives = new List<Knife>();
+        [SerializeField] private List<Knife> _allKnives;
         
 
         private Image _selectedKnife;
@@ -90,7 +90,8 @@ namespace UI
                     .SetLoops(-1, LoopType.Incremental)
                     .SetEase(Ease.Linear);
             }
-
+            
+           
             _effectsRotateSequence.Play();
         }
 
@@ -102,36 +103,28 @@ namespace UI
 
         private void Setup()
         {
+            AppleKnivesCount = _appleKnives.Length;
             _shopItems = new List<ShopKnife>();
             for (int i = 0; i < _appleKnives.Length; i++)
             {
                 var item = Instantiate(shopKnifePrefab, _appleKnivesContainer);
                 item.Init(_dataManager, OnItemSelected);
                 item.IsForBoss = false;
-                item.Setup(_appleKnives, i, this);
+                item.Setup(_allKnives, i, this);
                 _shopItems.Add(item);
             }
 
-            AppleKnivesCount = _appleKnives.Length;
 
-            for (int i = _appleKnives.Length + 1; i <= _bossKnives.Length + _appleKnives.Length; i++)
+            for (int i = _appleKnives.Length; i < _bossKnives.Length + _appleKnives.Length; i++)
             {
                 var item = Instantiate(shopKnifePrefab, _bossKnivesContainer);
                 item.Init(_dataManager, OnItemSelected);
                 item.IsForBoss = true;
-                item.Setup(_bossKnives, i, this);
+                item.Setup(_allKnives, i, this);
                 _shopItems.Add(item);
             }
             
-            foreach (var knife in _appleKnives)
-            {
-                _allKnives.Add(knife);
-            }
-
-            foreach (var knife in _bossKnives)
-            {
-                _allKnives.Add(knife);
-            }
+            
 
             _shopItems[_dataManager.SelectedKnifeIndex].OnItemClick();
         }
@@ -185,9 +178,7 @@ namespace UI
             _counter.text = itemsUnlocked + "/" + totalKnivesCount;
 
             
-            SelectedKnifePrefab = _selected.IsForBoss ? 
-                _allKnives[_dataManager.SelectedKnifeIndex - 1] 
-                : _allKnives[_dataManager.SelectedKnifeIndex];
+            SelectedKnifePrefab = _allKnives[_dataManager.SelectedKnifeIndex];
 
             _selectedKnife.sprite =
                 SelectedKnifePrefab.GetComponent<SpriteRenderer>().sprite;

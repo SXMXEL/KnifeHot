@@ -14,7 +14,8 @@ namespace Items
         [SerializeField] private Apple _applePrefab;
         [SerializeField] private Knife _knifePrefab;
         [SerializeField] private ParticleSystem _levelParticle, _levelTR, _levelTL;
-        
+
+        private bool _isRestart;
         private Sequence _rotateSequence;
         private int _availableKnives;
         private float _appleChance;
@@ -217,14 +218,22 @@ namespace Items
             _bounceSequence.Play();
         }
 
-        public void Dispose()
+        public void Dispose(bool isRestart)
         {
             var pause = 1f;
-            if (_scoreManager.Stage % 5 != 0)
+            var delay = 0.7f;
+            _isRestart = isRestart;
+            
+            if (_scoreManager.Stage % 5 != 0 && _isRestart == false)
             {
                 _levelParticle.Play();
             }
 
+            if (_isRestart)
+            {
+                delay = 0;
+            }
+            
             _rotateSequence?.Kill();
             _renderer.enabled = false;
             transform.rotation = Quaternion.identity;
@@ -232,39 +241,46 @@ namespace Items
 
             foreach (var knife in Knives)
             {
-                knife.transform.SetParent(null);
-                var bodyType = knife.Rigidbody.bodyType;
-                var hitStatus = knife.Hit;
-                knife.Rigidbody.bodyType = RigidbodyType2D.Dynamic;
-                knife.Hit = false;
-                knife.Rigidbody.AddForce(new Vector2(2f, 6), ForceMode2D.Impulse);
-                new DelayWrappedCommand(() =>
+                if (!_isRestart)
                 {
-                    knife.Hit = hitStatus;
-                    if (knife.Rigidbody.bodyType != RigidbodyType2D.Kinematic)
+                    knife.transform.SetParent(null);
+                    var bodyType = knife.Rigidbody.bodyType;
+                    var hitStatus = knife.Hit;
+                    knife.Rigidbody.bodyType = RigidbodyType2D.Dynamic;
+                    knife.Hit = false;
+                    knife.Rigidbody.AddForce(new Vector2(2f, 6), ForceMode2D.Impulse);
+                    new DelayWrappedCommand(() =>
                     {
-                        knife.Rigidbody.bodyType = RigidbodyType2D.Kinematic;
-                    }
-                }, pause).Started();
-                new DelayWrappedCommand(() => knife.ReturnObject(), 0.7f).Started();
+                        knife.Hit = hitStatus;
+                        if (knife.Rigidbody.bodyType != RigidbodyType2D.Kinematic)
+                        {
+                            knife.Rigidbody.bodyType = RigidbodyType2D.Kinematic;
+                        }
+                    }, pause).Started();
+                }
+                
+                new DelayWrappedCommand(() => knife.ReturnObject(), delay).Started();
             }
 
             Knives.Clear();
 
             foreach (var knife in _obstacleKnives)
             {
-                knife.transform.SetParent(null);
-                var bodyType = knife.Rigidbody.bodyType;
-                var gravity = knife.Rigidbody.gravityScale;
-                knife.Rigidbody.bodyType = RigidbodyType2D.Dynamic;
-                knife.Rigidbody.gravityScale = 1;
-                knife.Rigidbody.AddForce(new Vector2(2f, 6), ForceMode2D.Impulse);
-                new DelayWrappedCommand(() =>
+                if (!_isRestart)
                 {
-                    knife.Rigidbody.bodyType = bodyType;
-                    knife.Rigidbody.gravityScale = gravity;
-                },pause).Started();
-                new DelayWrappedCommand(() => knife.ReturnObstacle(), 0.7f).Started();
+                    knife.transform.SetParent(null);
+                    var bodyType = knife.Rigidbody.bodyType;
+                    var gravity = knife.Rigidbody.gravityScale;
+                    knife.Rigidbody.bodyType = RigidbodyType2D.Dynamic;
+                    knife.Rigidbody.gravityScale = 1;
+                    knife.Rigidbody.AddForce(new Vector2(2f, 6), ForceMode2D.Impulse);
+                    new DelayWrappedCommand(() =>
+                    {
+                        knife.Rigidbody.bodyType = bodyType;
+                        knife.Rigidbody.gravityScale = gravity;
+                    }, pause).Started();
+                }
+                new DelayWrappedCommand(() => knife.ReturnObstacle(), delay).Started();
             }
 
             _obstacleKnives.Clear();
