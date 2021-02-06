@@ -97,7 +97,7 @@ namespace UI
             {
                 _soundManager.PlayButton();
                 _pageManager.PageState = PageState.GamePage;
-                new DelayWrappedCommand(_levelManager.InitializeGame, 0.5f).Started();
+                _levelManager.StartGame(true);
             });
             _soundButton.onClick.RemoveAllListeners();
             _soundButton.onClick.AddListener(() =>

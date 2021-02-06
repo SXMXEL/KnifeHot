@@ -73,7 +73,7 @@ namespace Managers
             {
                 _isRestart = false;
             }
-            
+
             _knifePrefab.GetComponent<Knife>()
                 .Init(
                     _scoreManager,
@@ -161,10 +161,14 @@ namespace Managers
         }
 
 
-        public void RestartUI()
+        public void StartGame(bool isFirstStart)
         {
             StopCoroutine(GenerateKnife());
-            _isRestart = true;
+            if (!isFirstStart)
+            {
+                _isRestart = true;
+            }
+
             InitializeGame();
         }
 

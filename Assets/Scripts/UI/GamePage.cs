@@ -63,6 +63,7 @@ namespace UI
             _homeButton.onClick.AddListener(() =>
             {
                 _soundManager.PlayButton();
+                _levelManager.StartGame(false);
                 _pageManager.PageState = PageState.MenuPage;
             });
             _restartButton.onClick.RemoveAllListeners();
@@ -169,7 +170,7 @@ namespace UI
 
         private void Restart()
         {
-            _levelManager.RestartUI();
+            _levelManager.StartGame(false);
             _pageManager.PageState = PageState.GamePage;
         }
 
