@@ -248,7 +248,7 @@ namespace Items
                     var hitStatus = knife.Hit;
                     knife.Rigidbody.bodyType = RigidbodyType2D.Dynamic;
                     knife.Hit = false;
-                    knife.Rigidbody.AddForce(new Vector2(2f, 6), ForceMode2D.Impulse);
+                    knife.Rigidbody.AddForce(new Vector2(Random.Range(1f, 3f), Random.Range(5,7)), ForceMode2D.Impulse);
                     new DelayWrappedCommand(() =>
                     {
                         knife.Hit = hitStatus;
@@ -273,7 +273,7 @@ namespace Items
                     var gravity = knife.Rigidbody.gravityScale;
                     knife.Rigidbody.bodyType = RigidbodyType2D.Dynamic;
                     knife.Rigidbody.gravityScale = 1;
-                    knife.Rigidbody.AddForce(new Vector2(2f, 6), ForceMode2D.Impulse);
+                    knife.Rigidbody.AddForce(new Vector2(Random.Range(1f, 3f), Random.Range(5,7)), ForceMode2D.Impulse);
                     new DelayWrappedCommand(() =>
                     {
                         knife.Rigidbody.bodyType = bodyType;

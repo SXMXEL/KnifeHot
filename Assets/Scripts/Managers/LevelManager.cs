@@ -164,6 +164,7 @@ namespace Managers
         public void StartGame(bool isFirstStart)
         {
             StopCoroutine(GenerateKnife());
+            
             if (!isFirstStart)
             {
                 _isRestart = true;
@@ -333,6 +334,11 @@ namespace Managers
                 _scoreManager.IsGameOver = true;
                 new DelayWrappedCommand(() => _scoreManager.IsGameOver = false, 1.5f).Started();
                 _currentLevel.Dispose(_isRestart);
+
+                if (_isRestart)
+                {
+                    _isRestart = false;
+                }
 
                 if (_knifeCounter.gameObject.activeSelf)
                 {

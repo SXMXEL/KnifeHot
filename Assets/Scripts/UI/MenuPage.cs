@@ -96,8 +96,13 @@ namespace UI
             _playButton.onClick.AddListener(() =>
             {
                 _soundManager.PlayButton();
-                _pageManager.PageState = PageState.GamePage;
                 _levelManager.StartGame(true);
+                _playButton.interactable = false;
+                new DelayWrappedCommand(() =>
+                {
+                    _playButton.interactable = true;
+                    _pageManager.PageState = PageState.GamePage;
+                }, 0.55f).Started();
             });
             _soundButton.onClick.RemoveAllListeners();
             _soundButton.onClick.AddListener(() =>
