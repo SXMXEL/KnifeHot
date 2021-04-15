@@ -23,6 +23,7 @@ namespace Items
         private VibrationManager _vibrationManager;
         private GamePage _gamePage;
         private Action<Knife> _returnObstacle;
+        private Action _gameOverAction;
         private bool _isObstacle;
 
         public void Init(
@@ -30,12 +31,14 @@ namespace Items
             SoundManager soundManager,
             VibrationManager vibrationManager,
             GamePage gamePage,
+            Action gameOverAction,
             Action<Knife> returnKnife)
         {
             _scoreManager = scoreManager;
             _soundManager = soundManager;
             _vibrationManager = vibrationManager;
             _gamePage = gamePage;
+            _gameOverAction = gameOverAction;
             _returnKnife = returnKnife;
             
             _isObstacle = false;
@@ -110,7 +113,7 @@ namespace Items
                     Hit = true;
                 }, 1f).Started();
                 _scoreManager.IsGameOver = true;
-                new DelayWrappedCommand(_gamePage.GameOver, 1.5f).Started();
+                new DelayWrappedCommand(_gameOverAction.Invoke, 1.5f).Started();
             }
         }
 

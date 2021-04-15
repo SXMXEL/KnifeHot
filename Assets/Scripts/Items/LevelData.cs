@@ -21,7 +21,7 @@ namespace Items
         public BossLevelData BossLevelData => _bossLevelData;
         [SerializeField] private BossLevelData _bossLevelData;
         
-        public bool HasBoss => !string.IsNullOrEmpty(_bossLevelData.Name);
+        [SerializeField] public bool HasBoss;
     }
     
     [Serializable]
@@ -47,14 +47,14 @@ namespace Items
     {
         
     }
-    
+
+
     [Serializable]
     public class BossLevelData : LevelBaseData
     {
-        public string Name => _name;
+        public string Name;
         public int BossKnifeIndex => _bossKnifeIndex;
 
         [SerializeField] private int _bossKnifeIndex;
-        [SerializeField] private string _name;
     }
 }

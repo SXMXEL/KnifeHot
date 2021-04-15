@@ -29,8 +29,9 @@ MonoBehaviour:
       _availableKnives: 0
       _appleChance: 0
       _rotationPattern: []
+      Name: 
       _bossKnifeIndex: 0
-      _name: 
+    HasBoss: 0
   - _simpleLevelData:
       _availableKnives: 5
       _appleChance: 0.25
@@ -47,8 +48,9 @@ MonoBehaviour:
       _availableKnives: 0
       _appleChance: 0
       _rotationPattern: []
+      Name: 
       _bossKnifeIndex: 0
-      _name: 
+    HasBoss: 0
   - _simpleLevelData:
       _availableKnives: 6
       _appleChance: 0.25
@@ -65,8 +67,9 @@ MonoBehaviour:
       _availableKnives: 0
       _appleChance: 0
       _rotationPattern: []
+      Name: 
       _bossKnifeIndex: 0
-      _name: 
+    HasBoss: 0
   - _simpleLevelData:
       _availableKnives: 6
       _appleChance: 0.25
@@ -83,8 +86,9 @@ MonoBehaviour:
       _availableKnives: 0
       _appleChance: 0
       _rotationPattern: []
+      Name: 
       _bossKnifeIndex: 0
-      _name: 
+    HasBoss: 0
   - _simpleLevelData:
       _availableKnives: 0
       _appleChance: 0
@@ -101,8 +105,9 @@ MonoBehaviour:
         HoldDelay: 0
         Ease: 4
         Duration: 6
+      Name: Cheese
       _bossKnifeIndex: 0
-      _name: Cheese
+    HasBoss: 1
   - _simpleLevelData:
       _availableKnives: 6
       _appleChance: 0.25
@@ -119,8 +124,9 @@ MonoBehaviour:
       _availableKnives: 0
       _appleChance: 0
       _rotationPattern: []
+      Name: 
       _bossKnifeIndex: 0
-      _name: 
+    HasBoss: 0
   - _simpleLevelData:
       _availableKnives: 6
       _appleChance: 0.25
@@ -137,8 +143,9 @@ MonoBehaviour:
       _availableKnives: 0
       _appleChance: 0
       _rotationPattern: []
+      Name: 
       _bossKnifeIndex: 0
-      _name: 
+    HasBoss: 0
   - _simpleLevelData:
       _availableKnives: 6
       _appleChance: 0.25
@@ -155,8 +162,9 @@ MonoBehaviour:
       _availableKnives: 0
       _appleChance: 0
       _rotationPattern: []
+      Name: 
       _bossKnifeIndex: 0
-      _name: 
+    HasBoss: 0
   - _simpleLevelData:
       _availableKnives: 6
       _appleChance: 0.25
@@ -173,8 +181,9 @@ MonoBehaviour:
       _availableKnives: 0
       _appleChance: 0
       _rotationPattern: []
+      Name: 
       _bossKnifeIndex: 0
-      _name: 
+    HasBoss: 0
   - _simpleLevelData:
       _availableKnives: 0
       _appleChance: 0
@@ -191,8 +200,9 @@ MonoBehaviour:
         HoldDelay: 0
         Ease: 26
         Duration: 3
+      Name: 
       _bossKnifeIndex: 1
-      _name: Donut
+    HasBoss: 1
   - _simpleLevelData:
       _availableKnives: 6
       _appleChance: 0.25
@@ -209,8 +219,9 @@ MonoBehaviour:
       _availableKnives: 0
       _appleChance: 0
       _rotationPattern: []
+      Name: 
       _bossKnifeIndex: 0
-      _name: 
+    HasBoss: 0
   - _simpleLevelData:
       _availableKnives: 6
       _appleChance: 0.25
@@ -227,8 +238,9 @@ MonoBehaviour:
       _availableKnives: 0
       _appleChance: 0
       _rotationPattern: []
+      Name: 
       _bossKnifeIndex: 0
-      _name: 
+    HasBoss: 0
   - _simpleLevelData:
       _availableKnives: 7
       _appleChance: 0.25
@@ -245,8 +257,9 @@ MonoBehaviour:
       _availableKnives: 0
       _appleChance: 0
       _rotationPattern: []
+      Name: 
       _bossKnifeIndex: 0
-      _name: 
+    HasBoss: 0
   - _simpleLevelData:
       _availableKnives: 7
       _appleChance: 0.25
@@ -263,8 +276,9 @@ MonoBehaviour:
       _availableKnives: 0
       _appleChance: 0
       _rotationPattern: []
+      Name: 
       _bossKnifeIndex: 0
-      _name: 
+    HasBoss: 0
   - _simpleLevelData:
       _availableKnives: 0
       _appleChance: 0
@@ -281,8 +295,9 @@ MonoBehaviour:
         HoldDelay: 0
         Ease: 12
         Duration: 3
+      Name: 
       _bossKnifeIndex: 2
-      _name: Chainsaw
+    HasBoss: 1
   - _simpleLevelData:
       _availableKnives: 7
       _appleChance: 0.25
@@ -299,5 +314,6 @@ MonoBehaviour:
       _availableKnives: 0
       _appleChance: 0
       _rotationPattern: []
+      Name: 
       _bossKnifeIndex: 0
-      _name: 
+    HasBoss: 0

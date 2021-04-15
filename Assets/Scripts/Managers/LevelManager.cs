@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Linq;
 using DG.Tweening;
 using Items;
 using ScriptableObjects;
 using UI;
 using UnityEngine;
+using UnityEngine.Analytics;
 using Random = UnityEngine.Random;
 
 namespace Managers
@@ -34,6 +36,10 @@ namespace Managers
         [Range(0, 1)] [SerializeField] private float _knifeScale;
         [SerializeField] private float _knifeFireDelay;
 
+
+        private readonly string[] _easyBossNames = {"Cheese", "Tomato"};
+        private readonly string[] _mediumBossNames = {"Donut", "Stud"};
+        private readonly string[] _hardBossNames = {"Chainsaw", "Fan"};
         private LevelData _currentLevelData;
         private bool _isNextLevelInit;
         private Level _currentLevel;
@@ -53,6 +59,8 @@ namespace Managers
         private ScoreManager _scoreManager;
         private MenuPage _menuPage;
         private GamePage _gamePage;
+        private GameOverPage _gameOverPage;
+        private Action _gameOverAction;
 
         public void Init(
             DataManager dataManager,
@@ -60,7 +68,8 @@ namespace Managers
             VibrationManager vibrationManager,
             ScoreManager scoreManager,
             MenuPage menuPage,
-            GamePage gamePage)
+            GamePage gamePage,
+            Action gameOverAction)
         {
             _dataManager = dataManager;
             _soundManager = soundManager;
@@ -68,6 +77,7 @@ namespace Managers
             _scoreManager = scoreManager;
             _menuPage = menuPage;
             _gamePage = gamePage;
+            _gameOverAction = gameOverAction;
 
             if (_isRestart)
             {
@@ -80,6 +90,7 @@ namespace Managers
                     _soundManager,
                     _vibrationManager,
                     _gamePage,
+                    _gameOverAction,
                     _knifeFactory.ReturnKnife);
         }
 
@@ -119,6 +130,7 @@ namespace Managers
                     _soundManager,
                     _vibrationManager,
                     _gamePage,
+                    _gameOverAction,
                     _knifeFactory.ReturnKnife);
 
                 _currentKnife.FireKnife();
@@ -131,7 +143,7 @@ namespace Managers
             }
         }
 
-        public void InitializeGame()
+        private void InitializeGame()
         {
             _scoreManager.IsGameOver = false;
             _scoreManager.Score = 0;
@@ -145,14 +157,28 @@ namespace Managers
         private void SetupGame()
         {
             _totalSpawnKnives = 0;
-            Debug.Log("Element " + (_scoreManager.Stage - 1));
             _currentLevelData = _levelsDataHolder.GetLevelData(_scoreManager.Stage - 1);
-
             LevelBaseData levelBaseData = _currentLevelData.SimpleLevelData;
+
             if (_currentLevelData.HasBoss)
             {
                 levelBaseData = _currentLevelData.BossLevelData;
                 var bossLevelData = (BossLevelData) levelBaseData;
+                var randomNumber = Random.Range(0, 2);
+
+                if (_scoreManager.Stage <= 5)
+                {
+                    bossLevelData.Name = _easyBossNames[randomNumber];
+                }
+                else if (_scoreManager.Stage <= 10)
+                {
+                    bossLevelData.Name = _mediumBossNames[randomNumber];
+                }
+                else if (_scoreManager.Stage <= 15)
+                {
+                    bossLevelData.Name = _hardBossNames[randomNumber];
+                }
+
                 BossName = "BOSS: " + bossLevelData.Name;
             }
 
@@ -164,7 +190,7 @@ namespace Managers
         public void StartGame(bool isFirstStart)
         {
             StopCoroutine(GenerateKnife());
-            
+
             if (!isFirstStart)
             {
                 _isRestart = true;
@@ -253,6 +279,8 @@ namespace Managers
                 return;
             }
 
+            var eventName = _currentLevel.name + " passed";
+            AnalyticsEvent.Custom(eventName);
             _vibrationManager.CustomVibrate(VibrationSettings.Medium);
             Debug.Log("Next level");
 
@@ -315,7 +343,7 @@ namespace Managers
             _bossDefeatedSequence.Play();
         }
 
-        public void GenerateLevel(LevelBaseData levelBaseData)
+        private void GenerateLevel(LevelBaseData levelBaseData)
         {
             _totalSpawnKnives = 0;
             var delay = 3f;

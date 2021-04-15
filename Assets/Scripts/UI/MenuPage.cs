@@ -1,8 +1,10 @@
-﻿using DG.Tweening;
+﻿using System;
+using DG.Tweening;
 using Managers;
 using Pages;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Advertisements;
 using UnityEngine.UI;
 
 namespace UI
@@ -24,8 +26,6 @@ namespace UI
         [SerializeField] private GameObject _vibrateOn;
         [SerializeField] private GameObject _vibrateOff;
         [SerializeField] private TextMeshProUGUI _totalApplesText;
-
-        [Header("Text")] 
         [SerializeField] private TextMeshProUGUI _highStage;
         [SerializeField] private TextMeshProUGUI _highScore;
         [SerializeField] private TextMeshProUGUI _knifeText;
@@ -40,6 +40,8 @@ namespace UI
         [SerializeField] private Button _soundButton;
         [SerializeField] private Button _vibrateButton;
         [SerializeField] private Button _shopButton;
+        [SerializeField] private Button _adButton;
+        [SerializeField] private Button _rewardedAdButton;
 
         [SerializeField] private Transform _bottomButtons;
         [SerializeField] private GameObject _lunarConsole;
@@ -48,6 +50,7 @@ namespace UI
         private SoundManager _soundManager;
         private DataManager _dataManager;
         private PageManager _pageManager;
+        private AdManager _adManager;
         private LevelManager _levelManager;
         private Sequence _startAnimation;
         private Sequence _hotTextSequence;
@@ -58,12 +61,14 @@ namespace UI
             LevelManager levelManager,
             DataManager dataManager,
             SoundManager soundManager,
-            PageManager pageManager)
+            PageManager pageManager,
+            AdManager adManager)
         {
             _levelManager = levelManager;
             _dataManager = dataManager;
             _soundManager = soundManager;
             _pageManager = pageManager;
+            _adManager = adManager;
             _rewardUI.Init(
                 _soundManager,
                 _dataManager,
@@ -124,6 +129,18 @@ namespace UI
                 _soundManager.PlayButton();
                 _pageManager.PageState = PageState.ShopPage;
             });
+            _adButton.onClick.RemoveAllListeners();
+            _adButton.onClick.AddListener(() =>
+            {
+                _adManager.PlayInterstitialAd();
+                
+                if (_adManager.Result == ShowResult.Finished)
+                {
+                    _dataManager.TotalApples += 25;
+                }
+            });
+            _rewardedAdButton.onClick.RemoveAllListeners();
+            _rewardedAdButton.onClick.AddListener(_adManager.PlayRewardedVideoAd);
             var devModeButton = _knifeText.GetComponent<Button>();
             devModeButton.onClick.RemoveAllListeners();
             devModeButton.onClick.AddListener(() => { _lunarConsole.SetActive(!_lunarConsole.activeSelf); });
@@ -131,7 +148,12 @@ namespace UI
             UpdateVibrationUI();
             StartAnimation();
         }
-
+        
+        private void Update()
+        {
+            _totalApplesText.text = _dataManager.TotalApples.ToString();
+        }
+        
         private void StartAnimation()
         {
             var delay = 0.5f;
@@ -217,9 +239,8 @@ namespace UI
             _startAnimation.Play();
         }
 
-        private void Update()
+        public void UpdateHighScore()
         {
-            _totalApplesText.text = _dataManager.TotalApples.ToString();
             _highScore.text = "SCORE " + _dataManager.HighScore;
             _highStage.text = "STAGE " + _dataManager.HighStage;
         }

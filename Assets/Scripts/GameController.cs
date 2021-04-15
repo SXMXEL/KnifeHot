@@ -1,8 +1,9 @@
 ﻿using System;
 using Managers;
 using UI;
+using UnityEditor;
 using UnityEngine;
-
+using UnityEngine.Analytics;
 
 
 public class GameController : MonoBehaviour
@@ -11,17 +12,20 @@ public class GameController : MonoBehaviour
     [SerializeField] private PageManager _pageManager;
     [SerializeField] private LevelManager _levelManager;
     [SerializeField] private SoundManager _soundManager;
-    [SerializeField] private MenuPage menuPage;
-    [SerializeField] private GamePage gamePage;
-
+    [SerializeField] private AdManager _adManager;
+    [SerializeField] private MenuPage _menuPage;
+    [SerializeField] private GamePage _gamePage;
+    [SerializeField] private GameOverPage _gameOverPage;
     private NotificationsManager _notificationsManager;
     private DataManager _dataManager;
     private ScoreManager _scoreManager;
     private VibrationManager _vibrationManager;
+    
 
     private void Awake()
     {
         Init();
+        
     }
     
     private void Init()
@@ -32,23 +36,30 @@ public class GameController : MonoBehaviour
         _vibrationManager = new VibrationManager(_dataManager);
         _pageManager.PageState = PageState.MenuPage;
         _soundManager.Init(_dataManager);
-        menuPage.Init(
+        _adManager.Init(_dataManager);
+        _menuPage.Init(
             _levelManager,
             _dataManager,
             _soundManager,
-            _pageManager);
-        gamePage.Init(
-            _soundManager,
+            _pageManager,
+            _adManager);
+        _gamePage.Init(
             _scoreManager,
+            _levelManager);
+        _gameOverPage.Init(
+            _scoreManager,
+            _soundManager,
             _levelManager,
-            _pageManager);
+            _pageManager,
+            _menuPage.UpdateHighScore);
         _levelManager.Init(
             _dataManager,
             _soundManager,
             _vibrationManager,
             _scoreManager,
-            menuPage,
-            gamePage);
+            _menuPage,
+            _gamePage,
+            _gameOverPage.GameOver);
     }
 
     private void OnApplicationPause(bool pauseStatus)
