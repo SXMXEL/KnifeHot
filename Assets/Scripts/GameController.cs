@@ -1,10 +1,7 @@
 ﻿using System;
-using Altom.AltUnityDriver;
 using Managers;
 using UI;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Analytics;
 
 
 public class GameController : MonoBehaviour
@@ -43,7 +40,8 @@ public class GameController : MonoBehaviour
             _dataManager,
             _soundManager,
             _pageManager,
-            _adManager);
+            _adManager
+            );
         _gamePage.Init(
             _scoreManager,
             _levelManager);

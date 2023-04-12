@@ -4,14 +4,14 @@ using UnityEngine.Advertisements;
 
 namespace Managers
 {
-    public class AdManager : MonoBehaviour, IUnityAdsListener
+    public class AdManager : MonoBehaviour //,IUnityAdsInitializationListener
     {
         
         public bool IsTargetPlayStore;
         public bool IsTestAd;
         
         [HideInInspector]
-        public ShowResult Result;
+        //public ShowResult Result;
 
         private DataManager _dataManager;
         
@@ -24,10 +24,10 @@ namespace Managers
         public void Init(DataManager dataManager)
         {
             _dataManager = dataManager;
-            Advertisement.AddListener(this);
-            InitializeAdvertisement();
+            //Advertisement.Initialize(_playStoreID, true, this);
+            //InitializeAdvertisement();
         }
-
+        /*
         private void InitializeAdvertisement()
         {
             if (IsTargetPlayStore)
@@ -42,7 +42,7 @@ namespace Managers
 
         public void PlayInterstitialAd()
         {
-            if (!Advertisement.IsReady(_interstitialAd))
+            if (!Advertisement.(_interstitialAd))
             {
                 return;
             }
@@ -59,7 +59,7 @@ namespace Managers
             
             Advertisement.Show(_rewardedVideoAd);
         }
-
+        */
         public void OnUnityAdsReady(string placementId)
         {
         }
@@ -74,7 +74,7 @@ namespace Managers
             Debug.Log("Ad starts");
             _dataManager.SoundsSettings = false;
         }
-
+        /*
         public void OnUnityAdsDidFinish(string placementId, ShowResult showResult)
         {
             _dataManager.SoundsSettings = true;
@@ -100,6 +100,16 @@ namespace Managers
                 default:
                     throw new ArgumentOutOfRangeException(nameof(showResult), showResult, null);
             }
+        }*/
+
+        /*public void OnInitializationComplete()
+        {
+            Debug.Log("Ads initialized true");
         }
+
+        public void OnInitializationFailed(UnityAdsInitializationError error, string message)
+        {
+            Debug.Log("Ads initialized false");
+        }*/
     }
 }

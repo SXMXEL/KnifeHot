@@ -132,15 +132,15 @@ namespace UI
             _adButton.onClick.RemoveAllListeners();
             _adButton.onClick.AddListener(() =>
             {
-                _adManager.PlayInterstitialAd();
+                //_adManager.PlayInterstitialAd();
                 
-                if (_adManager.Result == ShowResult.Finished)
+                /*if (_adManager.Result == ShowResult.Finished)
                 {
                     _dataManager.TotalApples += 25;
-                }
+                }*/
             });
             _rewardedAdButton.onClick.RemoveAllListeners();
-            _rewardedAdButton.onClick.AddListener(_adManager.PlayRewardedVideoAd);
+            //_rewardedAdButton.onClick.AddListener(_adManager.PlayRewardedVideoAd);
             var devModeButton = _knifeText.GetComponent<Button>();
             devModeButton.onClick.RemoveAllListeners();
             devModeButton.onClick.AddListener(() => { _lunarConsole.SetActive(!_lunarConsole.activeSelf); });
